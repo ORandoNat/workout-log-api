@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Workout Log</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 0 20px; }
+    h1 { color: #333; }
+    input { padding: 8px; margin: 5px; border: 1px solid #ccc; border-radius: 4px; }
+    button { padding: 8px 16px; background: #333; color: white; border: none; border-radius: 4px; cursor: pointer; }
+    button:hover { background: #555; }
+    ul { list-style: none; padding: 0; }
+    li { padding: 10px; border-bottom: 1px solid #eee; }
+  </style>
+</head>
+<body>
+  <h1>Workout Log</h1>
+
+  <h2>Add Workout</h2>
+  <input type="text" id="name" placeholder="Workout name" />
+  <input type="number" id="duration" placeholder="Duration (mins)" />
+  <button onclick="addWorkout()">Add</button>
+  <p id="errMessage" style="display: none"> </p>
+
+  <h2>Workouts</h2>
+  <button onclick="loadWorkouts()">Load Workouts</button>
+  <ul id="workout-list"></ul>
+
+  <script>
+    const baseURL = 'http://172.27.185.122:3000';
+
+    async function addWorkout() {
+      const name = document.getElementById('name').value;
+      const duration = document.getElementById('duration').value;
+      const errMessage = document.getElementById('errMessage');
+
+      if (!name || !duration) {
+        errMessage.textContent = 'Please enter a name and duration';
+        errMessage.style.display = 'block';
+        return;
+      }
+      try{
+      await fetch(`${baseURL}/workouts`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, duration: parseInt(duration) })
+      });
+    }
+      catch(error){
+        console.error('Error adding workout:', error);
+        errMessage.textContent = 'Failed to add workout. Please try again.';
+        errMessage.style.display = 'block';
+        return;
+      }
+      errMessage.style.display = 'none';
+      document.getElementById('name').value = '';
+      document.getElementById('duration').value = '';
+      loadWorkouts();
+    }
+
+    async function loadWorkouts() {
+      const list = document.getElementById('workout-list');
+
+      try {
+        const res = await fetch(`${baseURL}/workouts`);
+        const workouts = await res.json();
+
+        list.innerHTML = '';
+
+        workouts.forEach(workout => {
+          const li = document.createElement('li');
+          const deleteBtn = document.createElement('button');
+
+          li.textContent = `${workout.name} — ${workout.duration} mins`;
+          list.appendChild(li);
+
+          deleteBtn.textContent = 'Delete';
+          deleteBtn.setAttribute('data-id', workout._id);
+          deleteBtn.onclick = () => deleteWorkout(workout._id);
+          li.appendChild(deleteBtn);
+        });
+      }
+      catch(error){
+        console.error('Error loading workouts:', error);
+        list.innerHTML = '<li>Failed to load workouts. Please try again.</li>';
+        return;
+      }
+    }
+
+    async function deleteWorkout(id) {
+      const errMessage = document.getElementById('errMessage');
+
+      try{
+        await fetch(`${baseURL}/workouts/${id}`, {
+        method: 'DELETE'
+      });
+      
+      }
+      catch(error) {
+        console.error('Error deleting workout:', error);
+        errMessage.textContent = 'Failed to delete workout. Please try again.';
+        errMessage.style.display = 'block';
+        return;
+      }
+      errMessage.style.display = 'none';
+      loadWorkouts();
+    }
+  </script>
+</body>
+</html>
