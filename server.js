@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const app = express();
@@ -17,6 +18,6 @@ app.get('/', (req, res) => {
   res.send('Workout Log API is running');
 });
 
-app.listen(3000, '0.0.0.0', () => {
-  console.log('Server running on port 3000');
+app.listen(process.env.PORT, '0.0.0.0', () => {
+  console.log(`Server running on port ${process.env.PORT}`);
 });
