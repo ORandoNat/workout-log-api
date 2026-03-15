@@ -28,7 +28,20 @@
   <ul id="workout-list"></ul>
 
   <script>
-    const baseURL = 'http://172.27.185.122:3000';
+    document.addEventListener('DOMContentLoaded', async () => {
+      try {
+        const res = await fetch('/config');
+        const config = await res.json();
+        window.baseURL = config.baseUrl;
+        loadWorkouts();
+      }
+      catch(error) {
+        console.error('Error fetching config:', error);
+        const errMessage = document.getElementById('errMessage');
+        errMessage.textContent = 'Failed to load configuration. Please refresh the page.';
+        errMessage.style.display = 'block';
+      }
+      });
 
     async function addWorkout() {
       const name = document.getElementById('name').value;

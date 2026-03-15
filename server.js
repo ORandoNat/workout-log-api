@@ -18,6 +18,12 @@ app.get('/', (req, res) => {
   res.send('Workout Log API is running');
 });
 
+app.get('/config', (req, res) => {
+  res.json({
+    baseUrl: process.env.BASE_URL
+  })
+})
+
 app.listen(process.env.PORT, '0.0.0.0', () => {
   console.log(`Server running on port ${process.env.PORT}`);
 });
