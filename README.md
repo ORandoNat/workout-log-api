@@ -27,3 +27,6 @@ Once the app is open and running, you can start adding workouts to the log. Each
 
 ## Known Issues and Limitations
 Current known issues and limitations include: baseURL is hardcoded at this time, meaning users will need to update the variable baseURL themselves in order for everything to run properly on their machine. Some features that are currently missing are the ability to load a specific workout, and the ability to update the details of stored workouts.
+
+## Changelog
+March 14, 2026 - Added dotenv functionality and changed hardcoded PORT value in server.js to an environment variable.
