@@ -11,7 +11,7 @@ This app was built using Node.js, Express, MongoDB, HTML, Javascript, Mongoose, 
 ## Prerequisites
 Before running this application, please confirm you have the following installed on your machine:  Node.js and MongoDB.
 
-## Getting started:
+## Getting started
   1. Open a terminal window
   2. Ensure Node.js is installed on your machine.
   3. Ensure MongoDB is installed on your machine.
@@ -26,7 +26,13 @@ Before running this application, please confirm you have the following installed
 Once the app is open and running, you can start adding workouts to the log. Each workout will need a name and duration. You can then load all of the workouts you've logged, and you can delete entries you no longer need/want.
 
 ## Known Issues and Limitations
-Current known issues and limitations include: baseURL is hardcoded at this time, meaning users will need to update the variable baseURL themselves in order for everything to run properly on their machine. Some features that are currently missing are the ability to load a specific workout, and the ability to update the details of stored workouts.
+- [X] baseURL is hardcoded at this time, meaning users will need to update the variable baseURL themselves in order for everything to run properly on their machine. (RESOLVED: See changelog entry for 03/15/2026)
+- [ ] Features that are currently missing:
+  - [ ] Load a specific workout
+  - [ ] Update the details of stored workouts
+  - [ ] Store date/time for each workout
+  - [ ] Notes for each workout to record nuances such as pain, energy level, improvements, etc.
 
 ## Changelog
-March 14, 2026 - Added dotenv functionality and changed hardcoded PORT value in server.js to an environment variable.
+- March 14, 2026 - Added dotenv functionality and changed hardcoded PORT value in server.js to an environment variable.
+- March 15, 2026 - Added a route to server.js to get the IP configuration from .env and changed hardcoded baseURL variable in index.html to asynchronous function to pull configuration details into the app.
