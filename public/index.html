@@ -20,6 +20,8 @@
   <h2>Add Workout</h2>
   <input type="text" id="name" placeholder="Workout name" />
   <input type="number" id="duration" placeholder="Duration (mins)" />
+  <br>
+  <textarea id="notes" placeholder="Notes (optional)"></textarea>
   <button onclick="addWorkout()">Add</button>
   <p id="errMessage" style="display: none"> </p>
 
@@ -46,6 +48,7 @@
     async function addWorkout() {
       const name = document.getElementById('name').value;
       const duration = document.getElementById('duration').value;
+      const notes = document.getElementById('notes').value;
       const errMessage = document.getElementById('errMessage');
 
       if (!name || !duration) {
@@ -57,7 +60,7 @@
       await fetch(`${baseURL}/workouts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, duration: parseInt(duration) })
+        body: JSON.stringify({ name, duration: parseInt(duration), notes })
       });
     }
       catch(error){
@@ -69,6 +72,7 @@
       errMessage.style.display = 'none';
       document.getElementById('name').value = '';
       document.getElementById('duration').value = '';
+      document.getElementById('notes').value = '';
       loadWorkouts();
     }
 
@@ -86,6 +90,9 @@
           const deleteBtn = document.createElement('button');
 
           li.textContent = `${workout.name} — ${workout.duration} mins`;
+          if (workout.notes) {
+            li.textContent += ` — Notes: ${workout.notes}`;
+          }
           list.appendChild(li);
 
           deleteBtn.textContent = 'Delete';

@@ -8,6 +8,10 @@ const workoutSchema = new mongoose.Schema({
   duration: {
     type: Number,
     required: true
+  },
+  notes: {
+    type: String,
+    required: false
   }
 });
 
