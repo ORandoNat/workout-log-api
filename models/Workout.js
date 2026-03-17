@@ -12,7 +12,14 @@ const workoutSchema = new mongoose.Schema({
   notes: {
     type: String,
     required: false
+  },
+  date: {
+    type: Date,
+    required: true,
+    default: Date.now
   }
+}, {
+  timestamps: true
 });
 
 module.exports = mongoose.model('Workout', workoutSchema);
