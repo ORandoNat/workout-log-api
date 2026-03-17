@@ -3,7 +3,7 @@
 This is a workout log to aid in logging and tracking fitness progress. The app allows you to add a new workout with a name and duration, load stored workouts, and delete a workout entry.
 
 ## Features
-The features of this app include adding a workout with name, duration and notes to the log, loading previously stored workouts, and deleting stored workouts.
+The features of this app include adding a workout with name, duration, notes, and date/time to the log, loading previously stored workouts, and deleting stored workouts.
 
 ## Technologies used
 This app was built using Node.js, Express, MongoDB, HTML, Javascript, Mongoose, and axios.
@@ -30,10 +30,15 @@ Once the app is open and running, you can start adding workouts to the log. Each
 - Features that are currently missing:
   - [ ] Load a specific workout
   - [ ] Update the details of stored workouts
-  - [ ] Store date/time for each workout
+  - [X] Store date/time for each workout
   - [X] Notes for each workout to record nuances such as pain, energy level, improvements, etc.
+ 
+## Roadmap
+- Update date/time feature to allow user to enter a custom date and time for entries, or default to the current date/time.
+- Update duration feature to allow user to choose between duration (in minutes) or quantity of repetitions (reps). Plan to accomplish by introducing a dropdown selection for the two options.
 
 ## Changelog
 - March 14, 2026 - Added dotenv functionality and changed hardcoded PORT value in server.js to an environment variable.
 - March 15, 2026 - Added a route to server.js to get the IP configuration from .env and changed hardcoded baseURL variable in index.html to asynchronous function to pull configuration details into the app.
 - March 16, 2026 - Added notes section. Updated Mongoose schema to allow for optional notes for each entry and adjusted frontend to reflect this addition.
+- March 17, 2026 - Added date/time field for workout entries. As of now date/time will automatically populate with the current date/time when a new entry is added. Updated schema and frontend to reflect these changes.
