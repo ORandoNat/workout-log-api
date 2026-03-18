@@ -30,11 +30,8 @@ Once the app is open and running, you can start adding workouts to the log. Each
 - Features that are currently missing:
   - [ ] Load a specific workout
   - [ ] Update the details of stored workouts
-  - [X] Store date/time for each workout
-  - [X] Notes for each workout to record nuances such as pain, energy level, improvements, etc.
  
 ## Roadmap
-- Update date/time feature to allow user to enter a custom date and time for entries, or default to the current date/time.
 - Update duration feature to allow user to choose between duration (in minutes) or quantity of repetitions (reps). Plan to accomplish by introducing a dropdown selection for the two options.
 
 ## Changelog
@@ -42,3 +39,4 @@ Once the app is open and running, you can start adding workouts to the log. Each
 - March 15, 2026 - Added a route to server.js to get the IP configuration from .env and changed hardcoded baseURL variable in index.html to asynchronous function to pull configuration details into the app.
 - March 16, 2026 - Added notes section. Updated Mongoose schema to allow for optional notes for each entry and adjusted frontend to reflect this addition.
 - March 17, 2026 - Added date/time field for workout entries. As of now date/time will automatically populate with the current date/time when a new entry is added. Updated schema and frontend to reflect these changes.
+- March 18, 2026 - Added the ability to select a custom date and time per entry. If no custom date or time is selected, the entry will default to the current date and time. Adjusted frontend UI to show only Hours:Minutes by dropping seconds via truncation.
