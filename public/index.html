@@ -22,6 +22,10 @@
   <input type="number" id="duration" placeholder="Duration (mins)" />
   <br>
   <textarea id="notes" placeholder="Notes (optional)"></textarea>
+  <div id="date-container">
+    <input type="date" id="date" />
+    <input type="time" id="time" />
+  </div>
   <button onclick="addWorkout()">Add</button>
   <p id="errMessage" style="display: none"> </p>
 
@@ -50,17 +54,25 @@
       const duration = document.getElementById('duration').value;
       const notes = document.getElementById('notes').value;
       const errMessage = document.getElementById('errMessage');
+      const dateInput = document.getElementById('date').value;
+      const timeInput = document.getElementById('time').value;
+      let dateTime = Date.now();
 
       if (!name || !duration) {
         errMessage.textContent = 'Please enter a name and duration';
         errMessage.style.display = 'block';
         return;
       }
+
+      if (dateInput && timeInput) {
+        dateTime = new Date(`${dateInput}T${timeInput}`);
+      }
+
       try{
       await fetch(`${baseURL}/workouts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, duration: parseInt(duration), notes })
+        body: JSON.stringify({ name, duration: parseInt(duration), notes, date: dateTime })
       });
     }
       catch(error){
@@ -73,11 +85,17 @@
       document.getElementById('name').value = '';
       document.getElementById('duration').value = '';
       document.getElementById('notes').value = '';
+      document.getElementById('date').value = '';
+      document.getElementById('time').value = '';
       loadWorkouts();
     }
 
     async function loadWorkouts() {
       const list = document.getElementById('workout-list');
+      const options = {
+        hour:'2-digit',
+        minute:'2-digit'
+      };
 
       try {
         const res = await fetch(`${baseURL}/workouts`);
@@ -94,7 +112,7 @@
             li.textContent += ` — Notes: ${workout.notes}`;
           }
           if (workout.date) {
-            const date = new Date(workout.date).toLocaleString();
+            const date = new Date(workout.date).toLocaleString(undefined, options);
             li.textContent += ` — Date: ${date}`;
           }
           list.appendChild(li);
