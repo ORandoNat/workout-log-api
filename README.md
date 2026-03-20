@@ -3,7 +3,7 @@
 This is a workout log to aid in logging and tracking fitness progress. The app allows you to add a new workout with a name and duration, load stored workouts, and delete a workout entry.
 
 ## Features
-The features of this app include adding a workout with name, duration, notes, and date/time to the log, loading previously stored workouts, and deleting stored workouts.
+The features of this app include adding a workout with name, duration, notes, and date/time to the log, loading previously stored workouts, editing and updating stored workouts, and deleting stored workouts.
 
 ## Technologies used
 This app was built using Node.js, Express, MongoDB, HTML, Javascript, Mongoose, and axios.
@@ -23,13 +23,12 @@ Before running this application, please confirm you have the following installed
   9. Once the server is started and you can confirm MongoDB is connected, navigate to the URL in your browser.
      
 ## Usage
-Once the app is open and running, you can start adding workouts to the log. Each workout will need a name and duration. You can then load all of the workouts you've logged, and you can delete entries you no longer need/want.
+Once the app is open and running, you can start adding workouts to the log. Each workout will need a name and duration. You can then load all of the workouts you've logged, edit existing entries, and delete entries you no longer need/want.
 
 ## Known Issues and Limitations
 - [X] baseURL is hardcoded at this time, meaning users will need to update the variable baseURL themselves in order for everything to run properly on their machine. (RESOLVED: See changelog entry for 03/15/2026)
 - Features that are currently missing:
-  - [ ] Load a specific workout
-  - [ ] Update the details of stored workouts
+  - [ ] Search/filter for a specific workout
  
 ## Roadmap
 - Update duration feature to allow user to choose between duration (in minutes) or quantity of repetitions (reps). Plan to accomplish by introducing a dropdown selection for the two options.
@@ -40,3 +39,4 @@ Once the app is open and running, you can start adding workouts to the log. Each
 - March 16, 2026 - Added notes section. Updated Mongoose schema to allow for optional notes for each entry and adjusted frontend to reflect this addition.
 - March 17, 2026 - Added date/time field for workout entries. As of now date/time will automatically populate with the current date/time when a new entry is added. Updated schema and frontend to reflect these changes.
 - March 18, 2026 - Added the ability to select a custom date and time per entry. If no custom date or time is selected, the entry will default to the current date and time. Adjusted frontend UI to show only Hours:Minutes by dropping seconds via truncation.
+- March 19, 2026 - Added edit button to existing entries to allow users to update the details of their workouts. Built editWorkout() function to retrieve the details of the stored workout and automatically render and populate a form with that information. The user can then edit as many fields as they wish. To submit the updated information, the user clicks a save button. Users can also select a cancel button to discard their changes and exit the form.
