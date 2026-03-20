@@ -28,6 +28,18 @@
   </div>
   <button onclick="addWorkout()">Add</button>
   <p id="errMessage" style="display: none"> </p>
+  <form id="editForm" style="display: none">
+    <input type="text" id="editName" />
+    <input type="number" id="editDuration" />
+    <br>
+    <textarea id="editNotes"></textarea>
+    <div id="editDateContainer">
+      <input type="date" id="editDate" />
+      <input type="time" id="editTime" />
+    </div>
+    <button type="button" id="saveEditBtn">Save changes</button>
+    <button type="button" id="cancelEditBtn">Cancel</button>
+  </form>
 
   <h2>Workouts</h2>
   <button onclick="loadWorkouts()">Load Workouts</button>
@@ -74,7 +86,7 @@
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ name, duration: parseInt(duration), notes, date: dateTime })
       });
-    }
+      }
       catch(error){
         console.error('Error adding workout:', error);
         errMessage.textContent = 'Failed to add workout. Please try again.';
@@ -93,6 +105,9 @@
     async function loadWorkouts() {
       const list = document.getElementById('workout-list');
       const options = {
+        month:'short',
+        day:'numeric',
+        year:'numeric',
         hour:'2-digit',
         minute:'2-digit'
       };
@@ -105,6 +120,7 @@
 
         workouts.forEach(workout => {
           const li = document.createElement('li');
+          const editBtn = document.createElement('button');
           const deleteBtn = document.createElement('button');
 
           li.textContent = `${workout.name} — ${workout.duration} mins`;
@@ -116,6 +132,11 @@
             li.textContent += ` — Date: ${date}`;
           }
           list.appendChild(li);
+
+          editBtn.textContent = 'Edit';
+          editBtn.setAttribute('data-id', workout._id);
+          editBtn.onclick = () => editWorkout(workout._id);
+          li.appendChild(editBtn);
 
           deleteBtn.textContent = 'Delete';
           deleteBtn.setAttribute('data-id', workout._id);
@@ -133,7 +154,7 @@
     async function deleteWorkout(id) {
       const errMessage = document.getElementById('errMessage');
 
-      try{
+      try {
         await fetch(`${baseURL}/workouts/${id}`, {
         method: 'DELETE'
       });
@@ -147,6 +168,81 @@
       }
       errMessage.style.display = 'none';
       loadWorkouts();
+    }
+
+    async function editWorkout(id) {
+      const errMessage = document.getElementById('errMessage');
+      
+      try {
+      const res = await fetch(`${baseURL}/workouts/${id}`);
+      const workout = await res.json();
+      
+      
+      
+      const editForm = document.getElementById('editForm');
+      const editName = document.getElementById('editName');
+      const editDuration = document.getElementById('editDuration');
+      const editNotes = document.getElementById('editNotes');
+      const editDate = document.getElementById('editDate');
+      const editTime = document.getElementById('editTime');
+      const saveEditBtn = document.getElementById('saveEditBtn');
+      const cancelEditBtn = document.getElementById('cancelEditBtn');
+
+      editName.value = workout.name;
+      editDuration.value = workout.duration;
+      editNotes.value = workout.notes || '';
+      if (workout.date) {
+        const date = new Date(workout.date);
+        editDate.value = date.toISOString().split('T')[0];
+        editTime.value = date.toTimeString().split(' ')[0].slice(0, 5);
+      }
+      editForm.style.display = 'block';
+
+      saveEditBtn.onclick = async () => {
+        const updatedName = editName.value;
+        const updatedDuration = editDuration.value;
+        const updatedNotes = editNotes.value;
+        const updatedDate = editDate.value;
+        const updatedTime = editTime.value;
+        let newDateTime = Date.now();
+
+      
+        if (!updatedName || !updatedDuration) {
+          errMessage.textContent = 'Please enter a name and duration';
+          errMessage.style.display = 'block';
+          return;
+        }
+        if (updatedDate && updatedTime) {
+          newDateTime = new Date(`${updatedDate}T${updatedTime}`);
+        }
+        try {
+          await fetch(`${baseURL}/workouts/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ name: updatedName, duration: parseInt(updatedDuration), notes: updatedNotes, date: newDateTime})
+          });
+        }
+        catch(error) {
+          console.error('Error updating workout:', error);
+          errMessage.textContent = 'Failed to update workout. Please try again.';
+          errMessage.style.display = 'block';
+          return;
+        }
+        errMessage.style.display = 'none';
+        editForm.style.display = 'none';
+        loadWorkouts();
+      };
+      cancelEditBtn.onclick = () => {
+        editForm.style.display = 'none';
+        errMessage.style.display = 'none';
+      }
+      }
+      catch(error) {
+        console.error('Error fetching workout:', error);
+        errMessage.textContent = 'Failed to load workout details. Please try again.';
+        errMessage.style.display = 'block';
+        return;
+      }
     }
   </script>
 </body>
