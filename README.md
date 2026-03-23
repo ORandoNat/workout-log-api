@@ -1,9 +1,13 @@
 # Workout Log API
 ## Description
-This is a workout log to aid in logging and tracking fitness progress. The app allows you to add a new workout with a name and duration, load stored workouts, and delete a workout entry.
+This is a workout log to aid in logging and tracking fitness progress. The app allows you to add a new workout with a name and amount of reps/time spent, load workouts, edit your workouts, search for workouts, and delete a workout entry.
 
 ## Features
-The features of this app include adding a workout with name, duration, notes, and date/time to the log, loading previously stored workouts, editing and updating stored workouts, searching and filtering workouts and deleting stored workouts.
+- Adding a workout with name, reps/time spent, notes, and date/time to the log
+- Loading workouts 
+- Editing and updating workouts 
+- Searching and filtering workouts
+- Deleting workouts
 
 ## Technologies used
 This app was built using Node.js, Express, MongoDB, HTML, Javascript, Mongoose, and axios.
@@ -23,15 +27,17 @@ Before running this application, please confirm you have the following installed
   9. Once the server is started and you can confirm MongoDB is connected, navigate to the URL in your browser.
      
 ## Usage
-Once the app is open and running, you can start adding workouts to the log. Each workout will need a name and duration. You can then load all of the workouts you've logged, edit existing entries, and delete entries you no longer need/want.
+Once the app is open and running, you can start adding workouts to the log. Each workout will need a name and amount(in reps/minutes). You can then load all of the workouts you've logged, edit existing entries, and delete entries you no longer need/want.
 
 ## Known Issues and Limitations
-- [X] baseURL is hardcoded at this time, meaning users will need to update the variable baseURL themselves in order for everything to run properly on their machine. (RESOLVED: See changelog entry for 03/15/2026)
-- Features that are currently missing:
-  - [X] Search/filter for a specific workout
+- Known issues and limitations of Version 1.0 have been addressed and resolved.
  
 ## Roadmap
-- Update duration feature to allow user to choose between duration (in minutes) or quantity of repetitions (reps). Plan to accomplish by introducing a dropdown selection for the two options.
+- [X] Update duration feature to allow user to choose between duration (in minutes) or quantity of repetitions (reps). Plan to accomplish by introducing a dropdown selection for the two options.
+- [X] Version 1.0 upload
+- Version 2.0 goals
+    - [ ] UI polish and CSS styling.
+    - [ ] Automatic sorting of workouts by date so that when the list is loaded or a workout is added, everything will appear in consecutive order by date.
 
 ## Changelog
 - March 14, 2026 - Added dotenv functionality and changed hardcoded PORT value in server.js to an environment variable.
@@ -41,3 +47,4 @@ Once the app is open and running, you can start adding workouts to the log. Each
 - March 18, 2026 - Added the ability to select a custom date and time per entry. If no custom date or time is selected, the entry will default to the current date and time. Adjusted frontend UI to show only Hours:Minutes by dropping seconds via truncation.
 - March 19, 2026 - Added edit button to existing entries to allow users to update the details of their workouts. Built editWorkout() function to retrieve the details of the stored workout and automatically render and populate a form with that information. The user can then edit as many fields as they wish. To submit the updated information, the user clicks a save button. Users can also select a cancel button to discard their changes and exit the form.
 - March 21, 2026 - Added search bar input and updated loadWorkouts() to filter through the entries based on user-entered criteria.
+- March 22, 2026 - Updated duration feature to allow user to choose between amount of reps or the amount of time in minutes that the workout took. Accomplished by adding a dropdown for reps/minutes to the HTML and adding workType to mongoDB schema.
