@@ -19,7 +19,11 @@
 
   <h2>Add Workout</h2>
   <input type="text" id="name" placeholder="Workout name" />
-  <input type="number" id="duration" placeholder="Duration (mins)" />
+  <input type="number" id="amount" placeholder="Amount" />
+  <select id="workType">
+    <option value="reps">Reps</option>
+    <option value="minutes">Minutes</option>
+  </select>
   <br>
   <textarea id="notes" placeholder="Notes (optional)"></textarea>
   <div id="date-container">
@@ -30,7 +34,11 @@
   <p id="errMessage" style="display: none"> </p>
   <form id="editForm" style="display: none">
     <input type="text" id="editName" />
-    <input type="number" id="editDuration" />
+    <input type="number" id="editAmount" />
+    <select id="editWorkType">
+      <option value="reps">Reps</option>
+      <option value="minutes">Minutes</option>
+    </select>
     <br>
     <textarea id="editNotes"></textarea>
     <div id="editDateContainer">
@@ -64,15 +72,16 @@
 
     async function addWorkout() {
       const name = document.getElementById('name').value;
-      const duration = document.getElementById('duration').value;
+      const amount = document.getElementById('amount').value;
+      const workType = document.getElementById('workType').value;
       const notes = document.getElementById('notes').value;
       const errMessage = document.getElementById('errMessage');
       const dateInput = document.getElementById('date').value;
       const timeInput = document.getElementById('time').value;
       let dateTime = Date.now();
 
-      if (!name || !duration) {
-        errMessage.textContent = 'Please enter a name and duration';
+      if (!name || !amount) {
+        errMessage.textContent = 'Please enter all required fields (name, amount)';
         errMessage.style.display = 'block';
         return;
       }
@@ -85,7 +94,7 @@
       await fetch(`${baseURL}/workouts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, duration: parseInt(duration), notes, date: dateTime })
+        body: JSON.stringify({ name, amount: parseInt(amount), workType, notes, date: dateTime })
       });
       }
       catch(error){
@@ -96,7 +105,8 @@
       }
       errMessage.style.display = 'none';
       document.getElementById('name').value = '';
-      document.getElementById('duration').value = '';
+      document.getElementById('amount').value = '';
+      document.getElementById('workType').selectedIndex = 0;
       document.getElementById('notes').value = '';
       document.getElementById('date').value = '';
       document.getElementById('time').value = '';
@@ -129,7 +139,7 @@
           const editBtn = document.createElement('button');
           const deleteBtn = document.createElement('button');
 
-          li.textContent = `${workout.name} — ${workout.duration} mins`;
+          li.textContent = `${workout.name} — ${workout.amount} ${workout.workType}`;
           if (workout.notes) {
             li.textContent += ` — Notes: ${workout.notes}`;
           }
@@ -185,7 +195,8 @@
       
       const editForm = document.getElementById('editForm');
       const editName = document.getElementById('editName');
-      const editDuration = document.getElementById('editDuration');
+      const editAmount = document.getElementById('editAmount');
+      const editWorkType = document.getElementById('editWorkType');
       const editNotes = document.getElementById('editNotes');
       const editDate = document.getElementById('editDate');
       const editTime = document.getElementById('editTime');
@@ -193,7 +204,8 @@
       const cancelEditBtn = document.getElementById('cancelEditBtn');
 
       editName.value = workout.name;
-      editDuration.value = workout.duration;
+      editAmount.value = workout.amount;
+      editWorkType.value = workout.workType;
       editNotes.value = workout.notes || '';
       if (workout.date) {
         const date = new Date(workout.date);
@@ -204,15 +216,16 @@
 
       saveEditBtn.onclick = async () => {
         const updatedName = editName.value;
-        const updatedDuration = editDuration.value;
+        const updatedAmount = editAmount.value;
+        const updatedWorkType = editWorkType.value;
         const updatedNotes = editNotes.value;
         const updatedDate = editDate.value;
         const updatedTime = editTime.value;
         let newDateTime = Date.now();
 
       
-        if (!updatedName || !updatedDuration) {
-          errMessage.textContent = 'Please enter a name and duration';
+        if (!updatedName || !updatedAmount) {
+          errMessage.textContent = 'Please enter all required fields (name, amount)';
           errMessage.style.display = 'block';
           return;
         }
@@ -223,7 +236,7 @@
           await fetch(`${baseURL}/workouts/${id}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: updatedName, duration: parseInt(updatedDuration), notes: updatedNotes, date: newDateTime})
+            body: JSON.stringify({ name: updatedName, amount: parseInt(updatedAmount), workType: updatedWorkType, notes: updatedNotes, date: newDateTime})
           });
         }
         catch(error) {

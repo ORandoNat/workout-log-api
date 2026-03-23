@@ -5,8 +5,13 @@ const workoutSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  duration: {
+  amount: {
     type: Number,
+    required: true
+  },
+  workType: {
+    type: String,
+    enum: ['reps', 'minutes'],
     required: true
   },
   notes: {
