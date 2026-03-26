@@ -49,3 +49,4 @@ Once the app is open and running, you can start adding workouts to the log. Each
 - March 21, 2026 - Added search bar input and updated loadWorkouts() to filter through the entries based on user-entered criteria.
 - March 22, 2026 - Updated duration feature to allow user to choose between amount of reps or the amount of time in minutes that the workout took. Accomplished by adding a dropdown for reps/minutes to the HTML and adding workType to mongoDB schema.
 - March 23, 2026 - Moved CSS styling to it's own file (styles.css) and restructured HTML to align with stylesheet.
+- March 26, 2026 - Adjusted CSS to make the app look like a white page on a blue background and added independent scrolling functionality to the list of workouts.
