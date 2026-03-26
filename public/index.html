@@ -7,259 +7,261 @@
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>Workout Log</h1>
+  <div id="pageContainer">
+    <h1>Workout Log</h1>
 
-  <h2>Add Workout</h2>
-  <div id="addWorkoutForm">
-    <div id="requiredFields">
-      <input type="text" id="name" placeholder="Workout name" />
-      <input type="number" id="amount" placeholder="Amount" />
-      <select id="workType">
+    <h2>Add Workout</h2>
+    <div id="addWorkoutForm">
+      <div id="requiredFields">
+        <input type="text" id="name" placeholder="Workout name" />
+        <input type="number" id="amount" placeholder="Amount" />
+        <select id="workType">
+          <option value="reps">Reps</option>
+          <option value="minutes">Minutes</option>
+        </select>
+      </div>
+      <div id="additionalFields">
+        <textarea id="notes" placeholder="Notes (optional)"></textarea>
+          <div id="date-container">
+            <input type="date" id="date" />
+            <input type="time" id="time" />
+          </div>
+      </div>
+      <button class="logButton" onclick="addWorkout()">Log Workout</button>
+    </div>
+    <p id="errMessage" style="display: none"> </p>
+    <form id="editForm" style="display: none">
+      <input type="text" id="editName" />
+      <input type="number" id="editAmount" />
+      <select id="editWorkType">
         <option value="reps">Reps</option>
         <option value="minutes">Minutes</option>
       </select>
-    </div>
-    <div id="additionalFields">
-      <textarea id="notes" placeholder="Notes (optional)"></textarea>
-        <div id="date-container">
-          <input type="date" id="date" />
-          <input type="time" id="time" />
-        </div>
-    </div>
-    <button class="logButton" onclick="addWorkout()">Log Workout</button>
-  </div>
-  <p id="errMessage" style="display: none"> </p>
-  <form id="editForm" style="display: none">
-    <input type="text" id="editName" />
-    <input type="number" id="editAmount" />
-    <select id="editWorkType">
-      <option value="reps">Reps</option>
-      <option value="minutes">Minutes</option>
-    </select>
-    <br>
-    <textarea id="editNotes"></textarea>
-    <div id="editDateContainer">
-      <input type="date" id="editDate" />
-      <input type="time" id="editTime" />
-    </div>
-    <button type="button" id="saveEditBtn">Save changes</button>
-    <button type="button" id="cancelEditBtn">Cancel</button>
-  </form>
+      <br>
+      <textarea id="editNotes"></textarea>
+      <div id="editDateContainer">
+        <input type="date" id="editDate" />
+        <input type="time" id="editTime" />
+      </div>
+      <button type="button" id="saveEditBtn">Save changes</button>
+      <button type="button" id="cancelEditBtn">Cancel</button>
+    </form>
 
-  <h2>Workouts</h2>
-  <input type="text" id="searchBar" placeholder="Search workouts..." oninput="loadWorkouts()" />
-  <button onclick="loadWorkouts()">Load Workouts</button>
-  <ul id="workout-list"></ul>
+    <h2>Workouts</h2>
+    <input type="text" id="searchBar" placeholder="Search workouts..." oninput="loadWorkouts()" />
+    <button onclick="loadWorkouts()">Load Workouts</button>
+    <ul id="workout-list"></ul>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', async () => {
-      try {
-        const res = await fetch('/config');
-        const config = await res.json();
-        window.baseURL = config.baseUrl;
-        loadWorkouts();
-      }
-      catch(error) {
-        console.error('Error fetching config:', error);
+    <script>
+      document.addEventListener('DOMContentLoaded', async () => {
+        try {
+          const res = await fetch('/config');
+          const config = await res.json();
+          window.baseURL = config.baseUrl;
+          loadWorkouts();
+        }
+        catch(error) {
+          console.error('Error fetching config:', error);
+          const errMessage = document.getElementById('errMessage');
+          errMessage.textContent = 'Failed to load configuration. Please refresh the page.';
+          errMessage.style.display = 'block';
+        }
+        });
+
+      async function addWorkout() {
+        const name = document.getElementById('name').value;
+        const amount = document.getElementById('amount').value;
+        const workType = document.getElementById('workType').value;
+        const notes = document.getElementById('notes').value;
         const errMessage = document.getElementById('errMessage');
-        errMessage.textContent = 'Failed to load configuration. Please refresh the page.';
-        errMessage.style.display = 'block';
-      }
-      });
+        const dateInput = document.getElementById('date').value;
+        const timeInput = document.getElementById('time').value;
+        let dateTime = Date.now();
 
-    async function addWorkout() {
-      const name = document.getElementById('name').value;
-      const amount = document.getElementById('amount').value;
-      const workType = document.getElementById('workType').value;
-      const notes = document.getElementById('notes').value;
-      const errMessage = document.getElementById('errMessage');
-      const dateInput = document.getElementById('date').value;
-      const timeInput = document.getElementById('time').value;
-      let dateTime = Date.now();
-
-      if (!name || !amount) {
-        errMessage.textContent = 'Please enter all required fields (name, amount)';
-        errMessage.style.display = 'block';
-        return;
-      }
-
-      if (dateInput && timeInput) {
-        dateTime = new Date(`${dateInput}T${timeInput}`);
-      }
-
-      try{
-      await fetch(`${baseURL}/workouts`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, amount: parseInt(amount), workType, notes, date: dateTime })
-      });
-      }
-      catch(error){
-        console.error('Error adding workout:', error);
-        errMessage.textContent = 'Failed to add workout. Please try again.';
-        errMessage.style.display = 'block';
-        return;
-      }
-      errMessage.style.display = 'none';
-      document.getElementById('name').value = '';
-      document.getElementById('amount').value = '';
-      document.getElementById('workType').selectedIndex = 0;
-      document.getElementById('notes').value = '';
-      document.getElementById('date').value = '';
-      document.getElementById('time').value = '';
-      loadWorkouts();
-    }
-
-    async function loadWorkouts() {
-      const list = document.getElementById('workout-list');
-      const options = {
-        month:'short',
-        day:'numeric',
-        year:'numeric',
-        hour:'2-digit',
-        minute:'2-digit'
-      };
-
-      try {
-        const res = await fetch(`${baseURL}/workouts`);
-        const workouts = await res.json();
-
-        const foundTerm = workouts.filter(workout => {
-          const searchTerm = document.getElementById('searchBar').value.toLowerCase();
-          return workout.name.toLowerCase().includes(searchTerm);
-        });
-
-        list.innerHTML = '';
-
-        foundTerm.forEach(workout => {
-          const li = document.createElement('li');
-          const editBtn = document.createElement('button');
-          const deleteBtn = document.createElement('button');
-
-          li.textContent = `${workout.name} — ${workout.amount} ${workout.workType}`;
-          if (workout.notes) {
-            li.textContent += ` — Notes: ${workout.notes}`;
-          }
-          if (workout.date) {
-            const date = new Date(workout.date).toLocaleString(undefined, options);
-            li.textContent += ` — Date: ${date}`;
-          }
-          list.appendChild(li);
-
-          editBtn.textContent = 'Edit';
-          editBtn.setAttribute('data-id', workout._id);
-          editBtn.classList.add('edit-btn');
-          editBtn.onclick = () => editWorkout(workout._id);
-          li.appendChild(editBtn);
-
-          deleteBtn.textContent = 'Delete';
-          deleteBtn.setAttribute('data-id', workout._id);
-          deleteBtn.classList.add('delete-btn');
-          deleteBtn.onclick = () => deleteWorkout(workout._id);
-          li.appendChild(deleteBtn);
-        });
-      }
-      catch(error){
-        console.error('Error loading workouts:', error);
-        list.innerHTML = '<li>Failed to load workouts. Please try again.</li>';
-        return;
-      }
-    }
-
-    async function deleteWorkout(id) {
-      const errMessage = document.getElementById('errMessage');
-
-      try {
-        await fetch(`${baseURL}/workouts/${id}`, {
-        method: 'DELETE'
-      });
-      
-      }
-      catch(error) {
-        console.error('Error deleting workout:', error);
-        errMessage.textContent = 'Failed to delete workout. Please try again.';
-        errMessage.style.display = 'block';
-        return;
-      }
-      errMessage.style.display = 'none';
-      loadWorkouts();
-    }
-
-    async function editWorkout(id) {
-      const errMessage = document.getElementById('errMessage');
-      
-      try {
-      const res = await fetch(`${baseURL}/workouts/${id}`);
-      const workout = await res.json();
-      
-      const editForm = document.getElementById('editForm');
-      const editName = document.getElementById('editName');
-      const editAmount = document.getElementById('editAmount');
-      const editWorkType = document.getElementById('editWorkType');
-      const editNotes = document.getElementById('editNotes');
-      const editDate = document.getElementById('editDate');
-      const editTime = document.getElementById('editTime');
-      const saveEditBtn = document.getElementById('saveEditBtn');
-      const cancelEditBtn = document.getElementById('cancelEditBtn');
-
-      editName.value = workout.name;
-      editAmount.value = workout.amount;
-      editWorkType.value = workout.workType;
-      editNotes.value = workout.notes || '';
-      if (workout.date) {
-        const date = new Date(workout.date);
-        editDate.value = date.toISOString().split('T')[0];
-        editTime.value = date.toTimeString().split(' ')[0].slice(0, 5);
-      }
-      editForm.style.display = 'block';
-
-      saveEditBtn.onclick = async () => {
-        const updatedName = editName.value;
-        const updatedAmount = editAmount.value;
-        const updatedWorkType = editWorkType.value;
-        const updatedNotes = editNotes.value;
-        const updatedDate = editDate.value;
-        const updatedTime = editTime.value;
-        let newDateTime = Date.now();
-
-      
-        if (!updatedName || !updatedAmount) {
+        if (!name || !amount) {
           errMessage.textContent = 'Please enter all required fields (name, amount)';
           errMessage.style.display = 'block';
           return;
         }
-        if (updatedDate && updatedTime) {
-          newDateTime = new Date(`${updatedDate}T${updatedTime}`);
+
+        if (dateInput && timeInput) {
+          dateTime = new Date(`${dateInput}T${timeInput}`);
         }
-        try {
-          await fetch(`${baseURL}/workouts/${id}`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: updatedName, amount: parseInt(updatedAmount), workType: updatedWorkType, notes: updatedNotes, date: newDateTime})
-          });
+
+        try{
+        await fetch(`${baseURL}/workouts`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ name, amount: parseInt(amount), workType, notes, date: dateTime })
+        });
         }
-        catch(error) {
-          console.error('Error updating workout:', error);
-          errMessage.textContent = 'Failed to update workout. Please try again.';
+        catch(error){
+          console.error('Error adding workout:', error);
+          errMessage.textContent = 'Failed to add workout. Please try again.';
           errMessage.style.display = 'block';
           return;
         }
         errMessage.style.display = 'none';
-        editForm.style.display = 'none';
+        document.getElementById('name').value = '';
+        document.getElementById('amount').value = '';
+        document.getElementById('workType').selectedIndex = 0;
+        document.getElementById('notes').value = '';
+        document.getElementById('date').value = '';
+        document.getElementById('time').value = '';
         loadWorkouts();
-      };
-      cancelEditBtn.onclick = () => {
-        editForm.style.display = 'none';
+      }
+
+      async function loadWorkouts() {
+        const list = document.getElementById('workout-list');
+        const options = {
+          month:'short',
+          day:'numeric',
+          year:'numeric',
+          hour:'2-digit',
+          minute:'2-digit'
+        };
+
+        try {
+          const res = await fetch(`${baseURL}/workouts`);
+          const workouts = await res.json();
+
+          const foundTerm = workouts.filter(workout => {
+            const searchTerm = document.getElementById('searchBar').value.toLowerCase();
+            return workout.name.toLowerCase().includes(searchTerm);
+          });
+
+          list.innerHTML = '';
+
+          foundTerm.forEach(workout => {
+            const li = document.createElement('li');
+            const editBtn = document.createElement('button');
+            const deleteBtn = document.createElement('button');
+
+            li.textContent = `${workout.name} — ${workout.amount} ${workout.workType}`;
+            if (workout.notes) {
+              li.textContent += ` — Notes: ${workout.notes}`;
+            }
+            if (workout.date) {
+              const date = new Date(workout.date).toLocaleString(undefined, options);
+              li.textContent += ` — Date: ${date}`;
+            }
+            list.appendChild(li);
+
+            editBtn.textContent = 'Edit';
+            editBtn.setAttribute('data-id', workout._id);
+            editBtn.classList.add('edit-btn');
+            editBtn.onclick = () => editWorkout(workout._id);
+            li.appendChild(editBtn);
+
+            deleteBtn.textContent = 'Delete';
+            deleteBtn.setAttribute('data-id', workout._id);
+            deleteBtn.classList.add('delete-btn');
+            deleteBtn.onclick = () => deleteWorkout(workout._id);
+            li.appendChild(deleteBtn);
+          });
+        }
+        catch(error){
+          console.error('Error loading workouts:', error);
+          list.innerHTML = '<li>Failed to load workouts. Please try again.</li>';
+          return;
+        }
+      }
+
+      async function deleteWorkout(id) {
+        const errMessage = document.getElementById('errMessage');
+
+        try {
+          await fetch(`${baseURL}/workouts/${id}`, {
+          method: 'DELETE'
+        });
+        
+        }
+        catch(error) {
+          console.error('Error deleting workout:', error);
+          errMessage.textContent = 'Failed to delete workout. Please try again.';
+          errMessage.style.display = 'block';
+          return;
+        }
         errMessage.style.display = 'none';
+        loadWorkouts();
       }
+
+      async function editWorkout(id) {
+        const errMessage = document.getElementById('errMessage');
+        
+        try {
+        const res = await fetch(`${baseURL}/workouts/${id}`);
+        const workout = await res.json();
+        
+        const editForm = document.getElementById('editForm');
+        const editName = document.getElementById('editName');
+        const editAmount = document.getElementById('editAmount');
+        const editWorkType = document.getElementById('editWorkType');
+        const editNotes = document.getElementById('editNotes');
+        const editDate = document.getElementById('editDate');
+        const editTime = document.getElementById('editTime');
+        const saveEditBtn = document.getElementById('saveEditBtn');
+        const cancelEditBtn = document.getElementById('cancelEditBtn');
+
+        editName.value = workout.name;
+        editAmount.value = workout.amount;
+        editWorkType.value = workout.workType;
+        editNotes.value = workout.notes || '';
+        if (workout.date) {
+          const date = new Date(workout.date);
+          editDate.value = date.toISOString().split('T')[0];
+          editTime.value = date.toTimeString().split(' ')[0].slice(0, 5);
+        }
+        editForm.style.display = 'block';
+
+        saveEditBtn.onclick = async () => {
+          const updatedName = editName.value;
+          const updatedAmount = editAmount.value;
+          const updatedWorkType = editWorkType.value;
+          const updatedNotes = editNotes.value;
+          const updatedDate = editDate.value;
+          const updatedTime = editTime.value;
+          let newDateTime = Date.now();
+
+        
+          if (!updatedName || !updatedAmount) {
+            errMessage.textContent = 'Please enter all required fields (name, amount)';
+            errMessage.style.display = 'block';
+            return;
+          }
+          if (updatedDate && updatedTime) {
+            newDateTime = new Date(`${updatedDate}T${updatedTime}`);
+          }
+          try {
+            await fetch(`${baseURL}/workouts/${id}`, {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ name: updatedName, amount: parseInt(updatedAmount), workType: updatedWorkType, notes: updatedNotes, date: newDateTime})
+            });
+          }
+          catch(error) {
+            console.error('Error updating workout:', error);
+            errMessage.textContent = 'Failed to update workout. Please try again.';
+            errMessage.style.display = 'block';
+            return;
+          }
+          errMessage.style.display = 'none';
+          editForm.style.display = 'none';
+          loadWorkouts();
+        };
+        cancelEditBtn.onclick = () => {
+          editForm.style.display = 'none';
+          errMessage.style.display = 'none';
+        }
+        }
+        catch(error) {
+          console.error('Error fetching workout:', error);
+          errMessage.textContent = 'Failed to load workout details. Please try again.';
+          errMessage.style.display = 'block';
+          return;
+        }
       }
-      catch(error) {
-        console.error('Error fetching workout:', error);
-        errMessage.textContent = 'Failed to load workout details. Please try again.';
-        errMessage.style.display = 'block';
-        return;
-      }
-    }
-  </script>
+    </script>
+  </div>
 </body>
 </html>

@@ -1,8 +1,16 @@
 body { 
-    font-family: Arial, sans-serif; 
-    max-width: 600px; 
-    margin: 40px auto; 
-    padding: 0 20px;
+    background: #1a92e2;
+    font-family: Arial, sans-serif;  
+    margin: 0;
+    padding: 0;
+}
+
+#pageContainer {
+    max-width: 700px;
+    margin: 40px auto;
+    padding: 40px;
+    border-radius: 8px;
+    background: white;
 }
 
 h1 { 
@@ -12,7 +20,9 @@ h1 {
 #addWorkoutForm {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
+    margin: 0 auto;
+    width: 700px;
 }
 
 input, select, textarea { 
@@ -24,22 +34,25 @@ input, select, textarea {
 
 #requiredFields {
     display: flex;
+    width: 100%;
+    justify-content: space-between;
 }
 
 #notes {
-    width: 345px;
-    height: 65px;
+    width: 350px;
+    height: 70px;
 }
 
 #additionalFields {
-    margin-top: 10px;
+    margin: 10px 0px 10px 0px;
     display: flex;
+    width: 100%;
+    justify-content: space-between;
 }
 
 #date-container {
     display: flex;
     flex-direction: column;
-    width: 125px;
 }
 
 .logButton {
@@ -47,6 +60,7 @@ input, select, textarea {
     background: #08cd4f;
     color: white;
     border: none;
+    margin: 0 auto; 
 }
 
 button { 
@@ -65,6 +79,11 @@ button:hover {
 ul { 
     list-style: none; 
     padding: 0; 
+}
+
+#workout-list {
+    height: 520px;
+    overflow-y: auto;
 }
 
 li { 
