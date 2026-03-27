@@ -43,11 +43,10 @@ input, select, textarea {
     height: 70px;
 }
 
-#additionalFields {
-    margin: 10px 0px 10px 0px;
+#notes-container {
+    margin: 10px auto;
     display: flex;
     width: 100%;
-    justify-content: space-between;
 }
 
 #date-container {

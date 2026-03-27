@@ -19,13 +19,14 @@
           <option value="reps">Reps</option>
           <option value="minutes">Minutes</option>
         </select>
-      </div>
-      <div id="additionalFields">
-        <textarea id="notes" placeholder="Notes (optional)"></textarea>
-          <div id="date-container">
+        <div id="date-container">
             <input type="date" id="date" />
             <input type="time" id="time" />
-          </div>
+        </div>
+      </div>
+      <div id="notes-container">
+        <button type="button" onclick="toggleNotes()">Add Notes +</button>
+        <textarea id="notes" placeholder="Type your notes here..." style="display: none"></textarea>
       </div>
       <button class="logButton" onclick="addWorkout()">Log Workout</button>
     </div>
@@ -76,6 +77,8 @@
         const errMessage = document.getElementById('errMessage');
         const dateInput = document.getElementById('date').value;
         const timeInput = document.getElementById('time').value;
+        const notesField = document.getElementById('notes');
+        const notesBtn = document.querySelector('#notes-container button');
         let dateTime = Date.now();
 
         if (!name || !amount) {
@@ -108,7 +111,29 @@
         document.getElementById('notes').value = '';
         document.getElementById('date').value = '';
         document.getElementById('time').value = '';
+        document.getElementById('notes').style.display = 'none';
+        notesBtn.textContent = 'Add Notes +';
         loadWorkouts();
+      }
+
+      async function toggleNotes() {
+        const notesField = document.getElementById('notes');
+        const notesBtn = document.querySelector('#notes-container button');
+        let userConfirm = true;
+
+        if (notesField.style.display === 'none') {
+          notesField.style.display = 'block';
+          notesBtn.textContent = 'Remove Notes -';
+        } else {
+          if (notesField.value) {
+            userConfirm = confirm('Are you sure? Any notes you have entered will be lost.');
+          }
+          if (userConfirm) {
+            notesField.style.display = 'none';
+            notesBtn.textContent = 'Add Notes +';
+            notesField.value = '';
+          }
+        }
       }
 
       async function loadWorkouts() {
