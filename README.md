@@ -51,3 +51,4 @@ Once the app is open and running, you can start adding workouts to the log. Each
 - March 23, 2026 - Moved CSS styling to it's own file (styles.css) and restructured HTML to align with stylesheet.
 - March 26, 2026 - Adjusted CSS to make the app look like a white page on a blue background and added independent scrolling functionality to the list of workouts.
 - March 27, 2026 - Changed the form for 'Add Workout' to have notes hidden by default. New button 'Add Notes +' will add the notes field to the form. When notes are added, the button text changes to 'Remove Notes -' and when clicked will display a confirmation box letting the user know their notes will be lost. Moved date-container to requiredFields div and updated 'additionalFields' div to 'notes-container' to hold button and textarea elements. Updated CSS styling rules accordingly.
+- March 29, 2026 - Refactored all IDs in HTML, JavaScript, and CSS to follow kebab-case naming convention.
