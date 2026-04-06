@@ -10,7 +10,7 @@ This is a workout log to aid in logging and tracking fitness progress. The app a
 - Deleting workouts
 
 ## Technologies used
-This app was built using Node.js, Express, MongoDB, HTML, Javascript, Mongoose, and axios.
+This app was built using Node.js, Express, MongoDB, HTML, CSS, Javascript, Mongoose.
 
 ## Prerequisites
 Before running this application, please confirm you have the following installed on your machine:  Node.js and MongoDB.
@@ -30,14 +30,13 @@ Before running this application, please confirm you have the following installed
 Once the app is open and running, you can start adding workouts to the log. Each workout will need a name and amount(in reps/minutes). You can then load all of the workouts you've logged, edit existing entries, and delete entries you no longer need/want.
 
 ## Known Issues and Limitations
-- Known issues and limitations of Version 1.0 have been addressed and resolved.
+- Elements do not have label attributes. Accessibility is limited.
  
 ## Roadmap
-- [X] Update duration feature to allow user to choose between duration (in minutes) or quantity of repetitions (reps). Plan to accomplish by introducing a dropdown selection for the two options.
-- [X] Version 1.0 upload
-- Version 2.0 goals
-    - [ ] UI polish and CSS styling.
-    - [ ] Automatic sorting of workouts by date so that when the list is loaded or a workout is added, everything will appear in consecutive order by date.
+- [ ] UI polish and CSS styling.
+- [ ] Begin organizing script.js into logical sections (API, DOM helpers, event wiring)
+- [ ] Identify any remaining duplication and mark candidates for refactoring
+- [ ] Add a loading state while fetching workouts
 
 ## Changelog
 - March 14, 2026 - Added dotenv functionality and changed hardcoded PORT value in server.js to an environment variable.
@@ -52,3 +51,4 @@ Once the app is open and running, you can start adding workouts to the log. Each
 - March 26, 2026 - Adjusted CSS to make the app look like a white page on a blue background and added independent scrolling functionality to the list of workouts.
 - March 27, 2026 - Changed the form for 'Add Workout' to have notes hidden by default. New button 'Add Notes +' will add the notes field to the form. When notes are added, the button text changes to 'Remove Notes -' and when clicked will display a confirmation box letting the user know their notes will be lost. Moved date-container to requiredFields div and updated 'additionalFields' div to 'notes-container' to hold button and textarea elements. Updated CSS styling rules accordingly.
 - March 29, 2026 - Refactored all IDs in HTML, JavaScript, and CSS to follow kebab-case naming convention.
+- April 6, 2026 - Separated JS from HTML into script.js. Replaced inline onclick attributes with event listeners. Extracted createWorkoutListItem as a DOM helper. Extracted formatDateTime and formatDisplayDate as date helpers. Added auto-sort by date to loadWorkouts. Removed debug console.log statements.
