@@ -1,0 +1,28 @@
+# Parking Lot
+
+## Ideas / Improvements
+- Extract date formatting into its own helper function
+- Improve error message styling and centralize display logic
+- Add loading state for fetch calls
+- Identify and remove any remaining duplication in script.js
+- Begin grouping related logic (API, DOM helpers, event wiring)
+- Build a testing suite to test the app
+
+## Questions to Revisit
+- Should I break script.js into modules later?
+- Should I rename script.js to app.js once structure grows?
+- Should DOM helpers and API helpers live in separate folders?
+
+## Future Refactors
+- Separate API calls into api.js
+- Separate DOM helpers into dom.js
+- Create a reusable formatDate() helper
+- Consider extracting search/filter logic into its own function
+
+## Nice-to-Haves
+- Add dark mode toggle
+- Add workout categories or tags
+- Expand search/filter functionality
+- Add animations for adding/removing workouts
+- Improve mobile layout and spacing
+- Edit Notes form should have it's own "pop-up" instead of being inserted into the addWorkout form.
