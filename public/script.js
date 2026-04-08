@@ -35,6 +35,7 @@ workoutList.addEventListener('click', (e) => {
 });
 searchBar.addEventListener('input', loadWorkouts);
 
+
 //Function definitions
 async function addWorkout() {
     const name = document.getElementById('name').value;
@@ -228,29 +229,90 @@ async function editWorkout(id) {
 
 function createWorkoutListItem(workout) {
     const li = document.createElement('li');
+    const workoutCard = document.createElement('div');
+
+    const workoutCardTop = document.createElement('div');
+    const workoutName = document.createElement('h3');
+    const workoutListBtns = document.createElement('div');
     const editBtn = document.createElement('button');
     const deleteBtn = document.createElement('button');
-        
-    li.textContent = `${workout.name} — ${workout.amount} ${workout.workType}`;
-        if (workout.notes) {
-            li.textContent += ` — Notes: ${workout.notes}`;
-        }
-        if (workout.date) {
-            const date = formatDisplayDate(workout.date);
-            li.textContent += ` — Date: ${date}`;
-        }
-        
-        editBtn.textContent = 'Edit';
-        editBtn.setAttribute('data-id', workout._id);
-        editBtn.classList.add('edit-btn');
-        li.appendChild(editBtn);
 
-        deleteBtn.textContent = 'Delete';
-        deleteBtn.setAttribute('data-id', workout._id);
-        deleteBtn.classList.add('delete-btn');
-        li.appendChild(deleteBtn);
+    const workoutCardMiddle = document.createElement('div');
+    const workoutAmount = document.createElement('p');
+    const workoutType = document.createElement('p');
+    const workoutDate = document.createElement('p');
 
-        return li;
+    const workoutCardBottom = document.createElement('div');
+    const workoutNotes = workout.notes ? document.createElement('p') : null;
+    const notesChevron = document.createElement('span');
+    
+    notesChevron.style.display = 'none';
+
+    workoutName.textContent = workout.name;
+    editBtn.textContent = 'Edit';
+    editBtn.setAttribute('data-id', workout._id);
+    editBtn.classList.add('edit-btn')
+    deleteBtn.textContent = 'Delete';
+    deleteBtn.setAttribute('data-id', workout._id);
+    deleteBtn.classList.add('delete-btn');
+    workoutCard.classList.add('workout-card');
+    workoutCardTop.classList.add('workout-card-top');
+
+    workoutAmount.textContent = `Amount: ${workout.amount}`;
+    workoutAmount.classList.add('workout-amount');
+    workoutType.textContent = `Type: ${workout.workType}`;
+    workoutType.classList.add('workout-type');
+    workoutDate.classList.add('workout-date');
+    workoutCardMiddle.classList.add('workout-card-middle');
+
+    workoutCardBottom.classList.add('workout-card-bottom');
+
+    if (workout.date) {
+        const date = formatDisplayDate(workout.date);
+        workoutDate.textContent = `Date: ${date}`;
+    } else {
+        workoutDate.textContent = 'Date: N/A';
+    }
+    if (workoutNotes) {
+        workoutNotes.style.display = 'none';
+        notesChevron.style.display = 'block';
+        notesChevron.textContent = 'Show Notes ▼';
+        workoutNotes.textContent = `Notes: ${workout.notes}`;
+        workoutNotes.classList.add('workout-notes');
+        notesChevron.classList.add('notes-chevron');
+        workoutCardBottom.appendChild(notesChevron);
+        workoutCardBottom.appendChild(workoutNotes);
+        notesChevron.addEventListener('click', () => {
+            if (workoutNotes.style.display === 'none') {
+                workoutNotes.style.display = 'block';
+                notesChevron.textContent = 'Hide Notes ▲';
+            } else {
+                workoutNotes.style.display = 'none';
+                notesChevron.textContent = 'Show Notes ▼';
+            }
+        });
+    }
+
+    workoutListBtns.classList.add('workout-list-btns');
+    workoutListBtns.appendChild(editBtn);
+    workoutListBtns.appendChild(deleteBtn);
+
+    workoutCardTop.appendChild(workoutName);
+    workoutCardTop.appendChild(workoutListBtns);
+
+    workoutCardMiddle.appendChild(workoutAmount);
+    workoutCardMiddle.appendChild(workoutType);
+    workoutCardMiddle.appendChild(workoutDate);
+
+
+    workoutCard.appendChild(workoutCardTop);
+    workoutCard.appendChild(workoutCardMiddle);
+    workoutCard.appendChild(workoutCardBottom);
+    
+
+    li.appendChild(workoutCard);
+
+    return li;
     }
 
 function formatDateTime(dateTime) {

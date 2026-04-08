@@ -1,12 +1,12 @@
 # Parking Lot
 
 ## Ideas / Improvements
-- Extract date formatting into its own helper function
 - Improve error message styling and centralize display logic
 - Add loading state for fetch calls
 - Identify and remove any remaining duplication in script.js
 - Begin grouping related logic (API, DOM helpers, event wiring)
 - Build a testing suite to test the app
+- Once labels are added, make the stats section show the field label on top and the value below it instead of side by side.
 
 ## Questions to Revisit
 - Should I break script.js into modules later?

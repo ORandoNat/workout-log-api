@@ -26,8 +26,7 @@ h1 {
 }
 
 input, select, textarea { 
-    padding: 8px; 
-    margin: 5px; 
+    padding: 4px; 
     border: 1px solid #ccc; 
     border-radius: 4px; 
 }
@@ -90,14 +89,59 @@ li {
     border-bottom: 1px solid #eee; 
 }
 
-li button {
-    margin-left: 10px;
-}
-
 .edit-btn {
-    background: #3498db;
+    background: #989898;
 }
 
 .delete-btn {
     background: #e74c3c;
+}
+
+.workout-card {
+    border: 2px solid #0fa4df5e;
+    border-radius: 8px;
+    padding: 10px;
+    margin: 20px;
+}
+
+.workout-card-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.workout-card-middle {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 10px;
+    padding: 10px 0;
+}
+
+.workout-card-bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.workout-notes {
+    margin-top: 10px;
+    font-style: italic;
+    color: #555;
+}
+
+.notes-chevron {
+    cursor: pointer;
+}
+
+#search-bar {
+    padding: 8px;
+}
+
+.notesButton {
+    background: #3498db;
+}
+
+.load-button {
+    background: #3498db;
 }
