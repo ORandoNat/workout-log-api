@@ -10,13 +10,13 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error fetching config:', error);
         const errMessage = document.getElementById('error-message');
         errMessage.textContent = 'Failed to load configuration. Please refresh the page.';
-        errMessage.style.display = 'block';
+        errMessage.classList.remove('hidden');
     }
     });
 
 //Event Wiring
-const logButton = document.querySelector('.logButton');
-const notesButton = document.querySelector('.notesButton');
+const logButton = document.getElementById('log-button');
+const notesButton = document.getElementById('notes-button');
 const loadButton = document.getElementById('load-button');
 const workoutList = document.getElementById('workout-list');
 const searchBar = document.getElementById('search-bar');
@@ -46,12 +46,12 @@ async function addWorkout() {
     const dateInput = document.getElementById('date').value;
     const timeInput = document.getElementById('time').value;
     const notesField = document.getElementById('notes');
-    const notesBtn = document.querySelector('#notes-container button');
+    const notesBtn = document.getElementById('notes-button');
     let dateTime = Date.now();
 
     if (!name || !amount) {
         errMessage.textContent = 'Please enter all required fields (name, amount)';
-        errMessage.style.display = 'block';
+        errMessage.classList.remove('hidden');
         return;
     }
 
@@ -69,35 +69,36 @@ async function addWorkout() {
     catch(error){
         console.error('Error adding workout:', error);
         errMessage.textContent = 'Failed to add workout. Please try again.';
-        errMessage.style.display = 'block';
+        errMessage.classList.remove('hidden');
         return;
     }
-    errMessage.style.display = 'none';
+    errMessage.classList.add('hidden');
     document.getElementById('name').value = '';
     document.getElementById('amount').value = '';
     document.getElementById('work-type').selectedIndex = 0;
     document.getElementById('notes').value = '';
     document.getElementById('date').value = '';
     document.getElementById('time').value = '';
-    document.getElementById('notes').style.display = 'none';
+    document.getElementById('notes').classList.add('hidden');
     notesBtn.textContent = 'Add Notes +';
     loadWorkouts();
 }
 
 async function toggleNotes() {
     const notesField = document.getElementById('notes');
-    const notesBtn = document.querySelector('#notes-container button');
+    const notesBtn = document.getElementById('notes-button');
     let userConfirm = true;
 
-    if (notesField.style.display === 'none') {
-        notesField.style.display = 'block';
+    if (notesField.classList.contains('hidden')) {
+        notesField.classList.remove('hidden');
         notesBtn.textContent = 'Remove Notes -';
+        return;
     } else {
         if (notesField.value) {
         userConfirm = confirm('Are you sure? Any notes you have entered will be lost.');
         }
         if (userConfirm) {
-            notesField.style.display = 'none';
+            notesField.classList.add('hidden');
             notesBtn.textContent = 'Add Notes +';
             notesField.value = '';
         }
@@ -143,10 +144,10 @@ async function deleteWorkout(id) {
     catch(error) {
         console.error('Error deleting workout:', error);
         errMessage.textContent = 'Failed to delete workout. Please try again.';
-        errMessage.style.display = 'block';
+        errMessage.classList.remove('hidden');
         return;
     }
-    errMessage.style.display = 'none';
+    errMessage.classList.add('hidden');
     loadWorkouts();
     }
 
@@ -177,7 +178,8 @@ async function editWorkout(id) {
         editDate.value = date.formattedDate;
         editTime.value = date.formattedTime;
     }
-    editForm.style.display = 'block';
+
+    editForm.classList.remove('hidden');
 
     saveEditBtn.onclick = async () => {
         const updatedName = editName.value;
@@ -191,7 +193,7 @@ async function editWorkout(id) {
     
         if (!updatedName || !updatedAmount) {
         errMessage.textContent = 'Please enter all required fields (name, amount)';
-        errMessage.style.display = 'block';
+        errMessage.classList.remove('hidden');
         return;
         }
         if (updatedDate && updatedTime) {
@@ -207,22 +209,22 @@ async function editWorkout(id) {
         catch(error) {
         console.error('Error updating workout:', error);
         errMessage.textContent = 'Failed to update workout. Please try again.';
-        errMessage.style.display = 'block';
+        errMessage.classList.remove('hidden');
         return;
         }
-        errMessage.style.display = 'none';
-        editForm.style.display = 'none';
+        errMessage.classList.add('hidden');
+        editForm.classList.add('hidden');
         loadWorkouts();
     };
     cancelEditBtn.onclick = () => {
-        editForm.style.display = 'none';
-        errMessage.style.display = 'none';
+        editForm.classList.add('hidden');
+        errMessage.classList.add('hidden');
     }
     }
     catch(error) {
         console.error('Error fetching workout:', error);
         errMessage.textContent = 'Failed to load workout details. Please try again.';
-        errMessage.style.display = 'block';
+        errMessage.classList.remove('hidden');
         return;
     }
     }
@@ -246,7 +248,7 @@ function createWorkoutListItem(workout) {
     const workoutNotes = workout.notes ? document.createElement('p') : null;
     const notesChevron = document.createElement('span');
     
-    notesChevron.style.display = 'none';
+    notesChevron.classList.add('hidden');
 
     workoutName.textContent = workout.name;
     editBtn.textContent = 'Edit';
@@ -274,8 +276,8 @@ function createWorkoutListItem(workout) {
         workoutDate.textContent = 'Date: N/A';
     }
     if (workoutNotes) {
-        workoutNotes.style.display = 'none';
-        notesChevron.style.display = 'block';
+        workoutNotes.classList.add('hidden');
+        notesChevron.classList.remove('hidden');
         notesChevron.textContent = 'Show Notes ▼';
         workoutNotes.textContent = `Notes: ${workout.notes}`;
         workoutNotes.classList.add('workout-notes');
@@ -283,12 +285,10 @@ function createWorkoutListItem(workout) {
         workoutCardBottom.appendChild(notesChevron);
         workoutCardBottom.appendChild(workoutNotes);
         notesChevron.addEventListener('click', () => {
-            if (workoutNotes.style.display === 'none') {
-                workoutNotes.style.display = 'block';
-                notesChevron.textContent = 'Hide Notes ▲';
-            } else {
-                workoutNotes.style.display = 'none';
+            if(workoutNotes.classList.toggle('hidden')) {
                 notesChevron.textContent = 'Show Notes ▼';
+            } else {
+                notesChevron.textContent = 'Hide Notes ▲';
             }
         });
     }

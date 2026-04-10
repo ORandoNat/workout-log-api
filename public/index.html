@@ -14,35 +14,59 @@
     <h2>Add Workout</h2>
     <div id="add-workout-form">
       <div id="required-fields">
-        <input type="text" id="name" placeholder="Workout name" />
-        <input type="number" id="amount" placeholder="Amount" />
-        <select id="work-type">
-          <option value="reps">Reps</option>
-          <option value="minutes">Minutes</option>
-        </select>
+        <div id="required-fields-name">
+          <label for="name">Workout name:</label>
+          <input type="text" id="name" placeholder="Workout name" />
+        </div>
+        <div id="required-fields-amount">
+          <label for="amount">Amount:</label>
+          <input type="number" id="amount" placeholder="Amount" />
+        </div>
+        <div id="required-fields-work-type">
+          <label for="work-type">Workout type:</label>
+          <select id="work-type">
+            <option value="reps">Reps</option>
+            <option value="minutes">Minutes</option>
+          </select>
+        </div>
         <div id="date-container">
-            <input type="date" id="date" />
-            <input type="time" id="time" />
+          <label for="date">Date:</label>
+          <input type="date" id="date" />
+          <label for="time">Time:</label>
+          <input type="time" id="time" />
         </div>
       </div>
       <div id="notes-container">
-        <button type="button" class="notesButton">Add Notes +</button>
-        <textarea id="notes" placeholder="Type your notes here..." style="display: none"></textarea>
+        <button type="button" id="notes-button">Add Notes +</button>
+        <textarea id="notes" class="hidden" placeholder="Type your notes here..."></textarea>
       </div>
-      <button class="logButton">Log Workout</button>
+      <button id="log-button">Log Workout</button>
     </div>
-    <p id="error-message" style="display: none"> </p>
-    <form id="edit-form" style="display: none">
-      <input type="text" id="edit-name" />
-      <input type="number" id="edit-amount" />
-      <select id="edit-work-type">
-        <option value="reps">Reps</option>
-        <option value="minutes">Minutes</option>
-      </select>
-      <br>
-      <textarea id="edit-notes"></textarea>
+    <p id="error-message" class="hidden"> </p>
+    <form id="edit-form" class="hidden">
+      <div id="edit-name-container">
+        <label for="edit-name">Workout name:</label>
+        <input type="text" id="edit-name" />
+      </div>
+      <div id="edit-amount-container">
+        <label for="edit-amount">Amount:</label>
+        <input type="number" id="edit-amount" />
+      </div>
+      <div id="edit-work-type-container">
+        <label for="edit-work-type">Workout type:</label>
+        <select id="edit-work-type">
+          <option value="reps">Reps</option>
+          <option value="minutes">Minutes</option>
+        </select>
+      </div>
+      <div id="edit-notes-container">
+        <label for="edit-notes">Notes:</label>
+        <textarea id="edit-notes"></textarea>
+      </div>
       <div id="edit-date-container">
+        <label for="edit-date">Date:</label>
         <input type="date" id="edit-date" />
+        <label for="edit-time">Time:</label>
         <input type="time" id="edit-time" />
       </div>
       <button type="button" id="save-edit-button">Save changes</button>
@@ -51,7 +75,7 @@
 
     <h2>Workouts</h2>
     <input type="text" id="search-bar" placeholder="Search workouts..." />
-    <button type="button" class="load-button">Load Workouts</button>
+    <button type="button" id="load-button">Load Workouts</button>
     <ul id="workout-list"></ul>
   </div>
 </body>

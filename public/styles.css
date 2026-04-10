@@ -42,6 +42,10 @@ input, select, textarea {
     height: 70px;
 }
 
+.hidden {
+    display: none;
+}
+
 #notes-container {
     margin: 10px auto;
     display: flex;
@@ -53,7 +57,11 @@ input, select, textarea {
     flex-direction: column;
 }
 
-.logButton {
+#error-message {
+    color: red;
+}
+
+#log-button {
     width: 200px;
     background: #08cd4f;
     color: white;
@@ -138,10 +146,11 @@ li {
     padding: 8px;
 }
 
-.notesButton {
+#load-button, #notes-button {
     background: #3498db;
 }
 
-.load-button {
-    background: #3498db;
+#required-fields-name, #required-fields-amount, #required-fields-work-type {
+    display: flex;
+    flex-direction: column;
 }
