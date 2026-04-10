@@ -33,6 +33,7 @@ Once the app is open and running, you can start adding workouts to the log. Each
 - Elements do not have label attributes. Accessibility is limited.
  
 ## Roadmap
+- [ ] Add label attributes to all elements to improve accessibility.
 - [ ] UI polish and CSS styling.
 - [ ] Begin organizing script.js into logical sections (API, DOM helpers, event wiring)
 - [ ] Identify any remaining duplication and mark candidates for refactoring
@@ -52,3 +53,4 @@ Once the app is open and running, you can start adding workouts to the log. Each
 - March 27, 2026 - Changed the form for 'Add Workout' to have notes hidden by default. New button 'Add Notes +' will add the notes field to the form. When notes are added, the button text changes to 'Remove Notes -' and when clicked will display a confirmation box letting the user know their notes will be lost. Moved date-container to requiredFields div and updated 'additionalFields' div to 'notes-container' to hold button and textarea elements. Updated CSS styling rules accordingly.
 - March 29, 2026 - Refactored all IDs in HTML, JavaScript, and CSS to follow kebab-case naming convention.
 - April 6, 2026 - Separated JS from HTML into script.js. Replaced inline onclick attributes with event listeners. Extracted createWorkoutListItem as a DOM helper. Extracted formatDateTime and formatDisplayDate as date helpers. Added auto-sort by date to loadWorkouts. Removed debug console.log statements.
+- April 8, 2026 - Redesigned createWorkoutListItem to build a structured card layout. Styled the workout card with CSS (padding, border/shadow, spacing between sections). Styled workout-card-top with flexbox to push name left and buttons right. Styled workout-card-middle stats row. Styled the chevron and notes section. Styled the Add Notes and Load Workouts buttons. Made changes to addWorkout form input sizing to make it look less chunky. Changed the background color of edit buttons to grey.
