@@ -1,6 +1,7 @@
 //Initialization
 document.addEventListener('DOMContentLoaded', async () => {
     try {
+        showLoading();
         const res = await fetch('/config');
         const config = await res.json();
         window.baseURL = config.baseUrl;
@@ -11,6 +12,9 @@ document.addEventListener('DOMContentLoaded', async () => {
         const errMessage = document.getElementById('error-message');
         errMessage.textContent = 'Failed to load configuration. Please refresh the page.';
         errMessage.classList.remove('hidden');
+    }
+    finally {
+        hideLoading();
     }
     });
 
@@ -60,6 +64,8 @@ async function addWorkout() {
     }
 
     try {
+        logButton.disabled = true;
+        showLoading();
         await fetch(`${baseURL}/workouts`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -71,6 +77,10 @@ async function addWorkout() {
         errMessage.textContent = 'Failed to add workout. Please try again.';
         errMessage.classList.remove('hidden');
         return;
+    }
+    finally {
+        logButton.disabled = false;
+        hideLoading();
     }
     errMessage.classList.add('hidden');
     document.getElementById('name').value = '';
@@ -108,6 +118,8 @@ async function loadWorkouts() {
     const list = document.getElementById('workout-list');
 
     try {
+        loadButton.disabled = true;
+        showLoading();
         const res = await fetch(`${baseURL}/workouts`);
         const workouts = await res.json();
 
@@ -130,22 +142,32 @@ async function loadWorkouts() {
         list.innerHTML = '<li>Failed to load workouts. Please try again.</li>';
         return;
     }
+    finally {
+        loadButton.disabled = false;
+        hideLoading();
+    }
     }
 
 async function deleteWorkout(id) {
     const errMessage = document.getElementById('error-message');
+    const deleteButton = document.querySelector(`button.delete-btn[data-id="${id}"]`);
 
     try {
+        deleteButton.disabled = true;
+        showLoading();
         await fetch(`${baseURL}/workouts/${id}`, {
         method: 'DELETE'
         });
-    
     }
     catch(error) {
         console.error('Error deleting workout:', error);
         errMessage.textContent = 'Failed to delete workout. Please try again.';
         errMessage.classList.remove('hidden');
         return;
+    }
+    finally {
+        deleteButton.disabled = false;
+        hideLoading();
     }
     errMessage.classList.add('hidden');
     loadWorkouts();
@@ -155,6 +177,7 @@ async function editWorkout(id) {
     const errMessage = document.getElementById('error-message');
     
     try {
+        showLoading();
         const res = await fetch(`${baseURL}/workouts/${id}`);
         const workout = await res.json();
         
@@ -200,6 +223,8 @@ async function editWorkout(id) {
         newDateTime = new Date(`${updatedDate}T${updatedTime}`);
         }
         try {
+        saveEditBtn.disabled = true;
+        showLoading();
         await fetch(`${baseURL}/workouts/${id}`, {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
@@ -211,6 +236,10 @@ async function editWorkout(id) {
         errMessage.textContent = 'Failed to update workout. Please try again.';
         errMessage.classList.remove('hidden');
         return;
+        }
+        finally {
+            saveEditBtn.disabled = false;
+            hideLoading();
         }
         errMessage.classList.add('hidden');
         editForm.classList.add('hidden');
@@ -226,6 +255,9 @@ async function editWorkout(id) {
         errMessage.textContent = 'Failed to load workout details. Please try again.';
         errMessage.classList.remove('hidden');
         return;
+    }
+    finally {
+        hideLoading();
     }
     }
 
@@ -330,4 +362,12 @@ function formatDisplayDate(dateTime) {
         minute: '2-digit'
     };
     return new Date(dateTime).toLocaleString(undefined, options);
+}
+
+function showLoading() {
+    document.getElementById('loading-indicator').classList.remove('hidden');
+}
+
+function hideLoading() {
+    document.getElementById('loading-indicator').classList.add('hidden');
 }

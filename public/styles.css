@@ -7,10 +7,12 @@ body {
 
 #page-container {
     max-width: 700px;
+    width: 90%;
     margin: 40px auto;
     padding: 40px;
     border-radius: 8px;
     background: white;
+    box-sizing: border-box;
 }
 
 h1 { 
@@ -22,7 +24,9 @@ h1 {
     flex-direction: column;
     align-items: flex-start;
     margin: 0 auto;
-    width: 700px;
+    border: 2px solid #0fa4df5e;
+    border-radius: 8px;
+    padding: 20px;
 }
 
 input, select, textarea { 
@@ -33,13 +37,36 @@ input, select, textarea {
 
 #required-fields {
     display: flex;
+    flex-direction: column;
     width: 100%;
-    justify-content: space-between;
+}
+
+#required-fields-name, #required-fields-amount, #required-fields-work-type {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 0;
+}
+
+#date-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+}
+
+#date-container-calendar, #date-container-time {
+    display: flex;
+    flex-direction: column;
+    margin: 10px 20px 10px 0;
+}
+
+#name, #amount, #work-type {
+    height: 100%;
+    width: 100%;
 }
 
 #notes {
-    width: 350px;
-    height: 70px;
+    width: 100%;
+    height: 80px;
 }
 
 .hidden {
@@ -47,14 +74,10 @@ input, select, textarea {
 }
 
 #notes-container {
-    margin: 10px auto;
     display: flex;
+    flex-direction: row;
     width: 100%;
-}
-
-#date-container {
-    display: flex;
-    flex-direction: column;
+    margin: 15px 0;
 }
 
 #error-message {
@@ -80,6 +103,14 @@ button {
 
 button:hover { 
     background: #555; 
+}
+
+#search-bar {
+    padding: 8px;
+}
+
+#load-button, #notes-button {
+    background: #3498db;
 }
 
 ul { 
@@ -109,7 +140,6 @@ li {
     border: 2px solid #0fa4df5e;
     border-radius: 8px;
     padding: 10px;
-    margin: 20px;
 }
 
 .workout-card-top {
@@ -142,15 +172,16 @@ li {
     cursor: pointer;
 }
 
-#search-bar {
-    padding: 8px;
-}
 
-#load-button, #notes-button {
-    background: #3498db;
-}
+@media (max-width: 480px) {
+    .workout-card-middle {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 4px;
+    }
 
-#required-fields-name, #required-fields-amount, #required-fields-work-type {
-    display: flex;
-    flex-direction: column;
+    #date-container {
+        flex-direction: column;
+        align-items: flex-start;
+    }
 }
