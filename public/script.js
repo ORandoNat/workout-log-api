@@ -9,14 +9,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
     catch(error) {
         console.error('Error fetching config:', error);
-        const errMessage = document.getElementById('error-message');
-        errMessage.textContent = 'Failed to load configuration. Please refresh the page.';
-        errMessage.classList.remove('hidden');
-    }
+        showMessage('error', 'Failed to load configuration. Please refresh the page.');
+        return;
+    }    
     finally {
         hideLoading();
     }
-    });
+});
 
 //Event Wiring
 const logButton = document.getElementById('log-button');
@@ -41,21 +40,31 @@ searchBar.addEventListener('input', loadWorkouts);
 
 
 //Function definitions
+function showMessage(type, text) {
+    const messageElement = document.getElementById('error-message');
+    messageElement.textContent = text;
+
+    messageElement.classList.remove('hidden', 'error', 'success');
+    messageElement.classList.add(type);
+}
+
+function hideMessage() {
+    const messageElement = document.getElementById('error-message');
+    messageElement.classList.add('hidden');
+}
+
 async function addWorkout() {
     const name = document.getElementById('name').value;
     const amount = document.getElementById('amount').value;
     const workType = document.getElementById('work-type').value;
     const notes = document.getElementById('notes').value;
-    const errMessage = document.getElementById('error-message');
     const dateInput = document.getElementById('date').value;
     const timeInput = document.getElementById('time').value;
-    const notesField = document.getElementById('notes');
     const notesBtn = document.getElementById('notes-button');
     let dateTime = Date.now();
 
     if (!name || !amount) {
-        errMessage.textContent = 'Please enter all required fields (name, amount)';
-        errMessage.classList.remove('hidden');
+        showMessage('error', 'Please enter all required fields (name, amount)');
         return;
     }
 
@@ -67,22 +76,28 @@ async function addWorkout() {
         logButton.disabled = true;
         showLoading();
         await fetch(`${baseURL}/workouts`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, amount: parseInt(amount), workType, notes, date: dateTime })
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                name, 
+                amount: parseInt(amount), 
+                workType, 
+                notes, 
+                date: dateTime 
+            })
         });
     }
     catch(error){
         console.error('Error adding workout:', error);
-        errMessage.textContent = 'Failed to add workout. Please try again.';
-        errMessage.classList.remove('hidden');
+        showMessage('error', 'Failed to add workout. Please try again.');
         return;
     }
     finally {
         logButton.disabled = false;
         hideLoading();
     }
-    errMessage.classList.add('hidden');
+    
+    hideMessage();
     document.getElementById('name').value = '';
     document.getElementById('amount').value = '';
     document.getElementById('work-type').selectedIndex = 0;
@@ -149,7 +164,6 @@ async function loadWorkouts() {
     }
 
 async function deleteWorkout(id) {
-    const errMessage = document.getElementById('error-message');
     const deleteButton = document.querySelector(`button.delete-btn[data-id="${id}"]`);
 
     try {
@@ -161,21 +175,18 @@ async function deleteWorkout(id) {
     }
     catch(error) {
         console.error('Error deleting workout:', error);
-        errMessage.textContent = 'Failed to delete workout. Please try again.';
-        errMessage.classList.remove('hidden');
+        showMessage('error', 'Failed to delete workout. Please try again.');
         return;
     }
     finally {
         deleteButton.disabled = false;
         hideLoading();
     }
-    errMessage.classList.add('hidden');
+    hideMessage();
     loadWorkouts();
     }
 
 async function editWorkout(id) {
-    const errMessage = document.getElementById('error-message');
-    
     try {
         showLoading();
         const res = await fetch(`${baseURL}/workouts/${id}`);
@@ -215,8 +226,7 @@ async function editWorkout(id) {
 
     
         if (!updatedName || !updatedAmount) {
-        errMessage.textContent = 'Please enter all required fields (name, amount)';
-        errMessage.classList.remove('hidden');
+        showMessage('error', 'Please enter all required fields (name, amount)');
         return;
         }
         if (updatedDate && updatedTime) {
@@ -233,27 +243,25 @@ async function editWorkout(id) {
         }
         catch(error) {
         console.error('Error updating workout:', error);
-        errMessage.textContent = 'Failed to update workout. Please try again.';
-        errMessage.classList.remove('hidden');
+        showMessage('error', 'Failed to update workout. Please try again.');
         return;
         }
         finally {
             saveEditBtn.disabled = false;
             hideLoading();
         }
-        errMessage.classList.add('hidden');
+        hideMessage();
         editForm.classList.add('hidden');
         loadWorkouts();
     };
     cancelEditBtn.onclick = () => {
         editForm.classList.add('hidden');
-        errMessage.classList.add('hidden');
+        hideMessage();
     }
     }
     catch(error) {
         console.error('Error fetching workout:', error);
-        errMessage.textContent = 'Failed to load workout details. Please try again.';
-        errMessage.classList.remove('hidden');
+        showMessage('error', 'Failed to load workout details. Please try again.');
         return;
     }
     finally {
