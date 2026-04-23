@@ -33,11 +33,8 @@ Once the app is open and running, you can start adding workouts to the log. Each
 - Elements do not have label attributes. Accessibility is limited.
  
 ## Roadmap
-- [ ] Add label attributes to all elements to improve accessibility.
 - [ ] UI polish and CSS styling.
-- [ ] Begin organizing script.js into logical sections (API, DOM helpers, event wiring)
 - [ ] Identify any remaining duplication and mark candidates for refactoring
-- [ ] Add a loading state while fetching workouts
 
 ## Changelog
 - March 14, 2026 - Added dotenv functionality and changed hardcoded PORT value in server.js to an environment variable.
@@ -57,3 +54,4 @@ Once the app is open and running, you can start adding workouts to the log. Each
 - April 10, 2026 - Added labels to addWorkout and editWorkout forms. Refactored event wiring. Removed inline styling from HTML and created a 'hidden' class to toggle visibility on the edit form, notes, and error messages.
 - April 20, 2026 - Updated addWorkout form to display with "card" layout. Added media query for mobile/smaller displays. Added clear loading states for API fetch calls.
 - April 21, 2026 - Refactored script.js to centralize message handling with showMessage/hideMessage helpers.
+- April 23, 2026 - Refactored script.js architecture and cleaned up DOM references.
