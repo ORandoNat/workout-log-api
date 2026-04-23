@@ -7,6 +7,9 @@
 - Begin grouping related logic (API, DOM helpers, event wiring)
 - Build a testing suite to test the app
 - Once labels are added, make the stats section show the field label on top and the value below it instead of side by side.
+- Add user accounts and login capability
+- Add the ability to track calories burned based on what workout was done
+- Allow user to enter their weight to automatically calculate BMI and avg calorie burn needed to cut/maintain/bulk
 
 ## Questions to Revisit
 - Should I break script.js into modules later?
