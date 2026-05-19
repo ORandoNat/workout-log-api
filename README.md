@@ -29,17 +29,23 @@ This app is a simple workout log designed to help you track your fitness progres
 
 ```
 workout-log-api/
-├── server.js               # Entry point for the Express server
+├── server.js               # Express server entry point
 ├── package.json            # Project metadata and dependencies
-├── .env                    # Environment variables (PORT, BASE_URL)
-├── public/                 # Frontend files served by Express
-│   ├── index.html          # Main UI
-│   ├── styles.css          # Styling
-│   └── script.js           # Frontend logic (fetch, render, events)
+├── .env                    # Environment variables (PORT, BASE_URL, MONGO_URI)
+├── middleware/
+│   └── requireAuth.js      # Auth middleware for protected routes
 ├── models/
-│   └── workoutModel.js     # Mongoose schema and model
+│   ├── userModel.js        # Mongoose schema/model for users
+│   └── workoutModel.js     # Mongoose schema/model for workouts
+├── public/                 # Frontend served by Express
+│   ├── index.html          # Main UI (workouts page)
+│   ├── login.html          # Login page
+│   ├── styles.css          # Styling
+│   ├── script.js           # Workout page logic (auth, fetch, render)
+│   └── login.js            # Login page logic (form submit, token handling)
 └── routes/
-    └── workoutRoutes.js    # API routes for workouts
+    ├── userRoutes.js       # Authentication routes (login)
+    └── workoutRoutes.js    # Workout CRUD API routes (protected)
 ```
 
 ## Why This Stack?
@@ -176,6 +182,8 @@ UI previews coming soon (workout list, add/edit forms, and notes section).
 - April 10, 2026 — Added labels; refactored event wiring; added "hidden" class
 - April 20, 2026 — Updated Add Workout form layout; added mobile media query; added loading states
 - April 21, 2026 — Centralized message handling with showMessage/hideMessage helpers
+- May 19, 2026 — Implemented full authentication flow; added persistent user session and welcome message; added top navigation header; improved UI layout; resolved JSON parsing and timing issues; removed internal files from version control
+
 
 ---
 ### About the Developer
