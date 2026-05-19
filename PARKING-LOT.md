@@ -10,6 +10,7 @@
 - Add user accounts and login capability
 - Add the ability to track calories burned based on what workout was done
 - Allow user to enter their weight to automatically calculate BMI and avg calorie burn needed to cut/maintain/bulk
+- At some point change so that the time portion is within a 'View Details' info icon hover, or a more details section.
 
 ## Questions to Revisit
 - Should I break script.js into modules later?

@@ -24,7 +24,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     finally {
         hideLoading();
     }
+
+    const user = JSON.parse(localStorage.getItem('user') || "null");
+    if (user && user.email) {
+        document.getElementById('welcome-message').textContent = `Welcome, ${user.displayName || user.email}!`;
+}
 });
+
+const token = localStorage.getItem('token');
+if (!token) {
+    window.location.href = '/login.html';
+}
+
+document.getElementById('logout-btn').addEventListener('click', () => {
+    localStorage.removeItem('token');
+    window.location.href = '/login.html';
+});
+
+
 
 // =========================
 // SECTION 2: Helper Functions
@@ -162,7 +179,11 @@ async function loadWorkouts() {
     try {
         loadButton.disabled = true;
         showLoading();
-        const res = await fetch(`${baseURL}/workouts`);
+        const res = await fetch('/api/workouts', {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
         const workouts = await res.json();
 
         workouts.sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -212,9 +233,12 @@ async function addWorkout() {
     try {
         logButton.disabled = true;
         showLoading();
-        await fetch(`${baseURL}/workouts`, {
+        await fetch('/api/workouts', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json', 
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
             body: JSON.stringify({
                 name, 
                 amount: parseInt(amount), 
@@ -249,7 +273,11 @@ async function addWorkout() {
 async function editWorkout(id) {
     try {
         showLoading();
-        const res = await fetch(`${baseURL}/workouts/${id}`);
+        const res = await fetch(`/api/workouts/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
+        });
         const workout = await res.json();
         
         const editForm = document.getElementById('edit-form');
@@ -294,9 +322,12 @@ async function editWorkout(id) {
         try {
         saveEditBtn.disabled = true;
         showLoading();
-        await fetch(`${baseURL}/workouts/${id}`, {
+        await fetch(`/api/workouts/${id}`, {
             method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            },
             body: JSON.stringify({ name: updatedName, amount: parseInt(updatedAmount), workType: updatedWorkType, notes: updatedNotes, date: newDateTime})
         });
         }
@@ -334,8 +365,11 @@ async function deleteWorkout(id) {
     try {
         deleteButton.disabled = true;
         showLoading();
-        await fetch(`${baseURL}/workouts/${id}`, {
-        method: 'DELETE'
+        await fetch(`/api/workouts/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('token')}`
+            }
         });
     }
     catch(error) {
