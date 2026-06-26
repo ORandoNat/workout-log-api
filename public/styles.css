@@ -1,3 +1,7 @@
+main {
+    margin-top: 1rem;
+}
+
 body { 
     background: #1a92e2;
     font-family: Arial, sans-serif;  
@@ -69,6 +73,73 @@ input, select, textarea {
     height: 80px;
 }
 
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.45);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 999;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.modal-backdrop:not(.hidden) {
+    opacity: 1;
+}
+
+.modal-box {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 400px;
+    position: relative;
+}
+
+body.modal-open {
+    overflow: hidden;
+}
+
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+#delete-modal .danger {
+    color: white;
+    border: none;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    background-color: #d9534f
+}
+
+#delete-toast {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #d9534f;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 6px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+#delete-toast.show {
+    opacity: 1;
+}
+
 .hidden {
     display: none;
 }
@@ -110,12 +181,37 @@ button:hover {
     background: #555; 
 }
 
+.edit-btn {
+    background: #989898;
+}
+
+.delete-btn {
+    background: #e74c3c;
+}
+
+button:active,
+.edit-btn:active,
+.delete-btn:active {
+    transform: scale(0.97);
+    transition: transform 0.1s ease;
+}
+
 #search-bar {
     padding: 8px;
 }
 
+#clear-search {
+    margin-left: 0.5rem;
+    padding: 0.25rem 0.5rem;
+}
+
 #load-button, #notes-button {
     background: #3498db;
+}
+
+.loading-button {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 ul { 
@@ -133,12 +229,38 @@ li {
     border-bottom: 1px solid #eee; 
 }
 
-.edit-btn {
-    background: #989898;
+.workout-type-tag {
+    display: inline-block;
+    padding: 2px 6px;
+    margin-left: 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: white;
+    animation: tagFadeIn 0.25s ease forwards;
 }
 
-.delete-btn {
-    background: #e74c3c;
+.workout-type-tag.strength {
+    background-color: #3b82f6; /* Blue for Strength */
+}
+
+.workout-type-tag.cardio {
+    background-color: #ef4444; /* Red for Cardio */
+}
+
+.workout-type-tag.mobility {
+    background-color: #10b981; /* Green for Mobility */
+}
+
+.workout-type-tag.other {
+    background-color: #6b7280; /* Gray for Other */
+}
+
+.workout-type-tag:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.15);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+    transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
 }
 
 .workout-card {
@@ -177,6 +299,18 @@ li {
     cursor: pointer;
 }
 
+.workout-item {
+    transition: background-color 0.15s ease, transform 0.15s ease;
+}
+
+.workout-item:hover {
+    background-color: #f7f7f7;
+    transform: translateX(2px);
+}
+
+.workout-item:active {
+    transform: translateX(1px) scale(0.99);
+}
 
 @media (max-width: 480px) {
     .workout-card-middle {
@@ -199,7 +333,8 @@ li {
     background-color: #1f2937;
     color: white;
     font-size: 1.1rem;
-    border-bottom: 2px solid #111827
+    border-bottom: 2px solid #111827;
+    margin-bottom: 1rem;
 }
 
 .header-left {
@@ -225,3 +360,48 @@ li {
 .header-right:hover {
     background: #dc2626;
 }
+
+#loading-indicator {
+    text-align: center;
+    padding: 1rem;
+    font-size: 1.1rem;
+    color: #555;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+#loading-indicator:not(.hidden) {
+    opacity: 1;
+}
+
+.empty {
+    text-align: center;
+    padding: 1rem;
+    font-size: 1.1rem;
+    color: #777;
+}
+
+.fade-in {
+    opacity: 0;
+    transform: translateY(4px);
+    animation: fadeIn 0.25s ease-out forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes tagFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateY(-3px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+

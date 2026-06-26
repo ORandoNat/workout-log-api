@@ -7,6 +7,21 @@ const notesButton = document.getElementById('notes-button');
 const loadButton = document.getElementById('load-button');
 const workoutList = document.getElementById('workout-list');
 const searchBar = document.getElementById('search-bar');
+const clearSearch = document.getElementById('clear-search');
+const editModal = document.getElementById('edit-modal');
+const editForm = document.getElementById('edit-form');
+const deleteModal = document.getElementById('delete-modal');
+const cancelDeleteBtn = document.getElementById('cancel-delete-button');
+const confirmDeleteBtn = document.getElementById('confirm-delete-button');
+
+let currentDeleteId = null;
+
+(function () {
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = '/login.html';
+    }
+})();
 
 document.addEventListener('DOMContentLoaded', async () => {
     try {
@@ -38,10 +53,66 @@ if (!token) {
 
 document.getElementById('logout-btn').addEventListener('click', () => {
     localStorage.removeItem('token');
+    localStorage.removeItem('user');
     window.location.href = '/login.html';
 });
 
+editForm.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                saveEditBtn.click();
+            }
+        });
 
+editModal.addEventListener('click', (e) => {
+            if (e.target === editModal) {
+                editModal.classList.add('hidden');
+                document.body.classList.remove('modal-open');
+            }
+        });
+
+cancelDeleteBtn.addEventListener('click', () => {
+    deleteModal.classList.add('hidden');
+    document.body.classList.remove('modal-open');
+    currentDeleteId = null;
+});
+
+confirmDeleteBtn.addEventListener('click', async () => {
+    if (!currentDeleteId) return;
+
+    const token = localStorage.getItem('token');
+
+    try {
+        const res = await fetch(`/api/workouts/${currentDeleteId}`, {
+            method: 'DELETE',
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        });
+
+        if(!res.ok) {
+            console.error("Failed to delete workout");
+            return;
+        }
+
+        showDeleteToast();
+        await loadWorkouts();  //Refresh list
+    } catch(error) {
+        console.error("Error deleting workout:", error);
+    }
+
+    deleteModal.classList.add('hidden');
+    document.body.classList.remove('modal-open');
+    currentDeleteId = null;
+})
+
+deleteModal.addEventListener('click', (e) => {
+    if (e.target === deleteModal) {
+        deleteModal.classList.add('hidden');
+        document.body.classList.remove('modal-open');
+        currentDeleteId = null;
+    }
+});
 
 // =========================
 // SECTION 2: Helper Functions
@@ -49,10 +120,12 @@ document.getElementById('logout-btn').addEventListener('click', () => {
 
 function showLoading() {
     document.getElementById('loading-indicator').classList.remove('hidden');
+    document.getElementById('workout-list').classList.add('hidden');
 }
 
 function hideLoading() {
     document.getElementById('loading-indicator').classList.add('hidden');
+    document.getElementById('workout-list').classList.remove('hidden');
 }
 
 function showMessage(type, text) {
@@ -87,6 +160,15 @@ function formatDisplayDate(dateTime) {
 
 function createWorkoutListItem(workout) {
     const li = document.createElement('li');
+    li.classList.add('workout-item');
+
+    const type = getWorkoutType(workout.name);
+
+    const typeTag = document.createElement('span');
+    typeTag.classList.add('workout-type-tag', type.toLowerCase());
+    typeTag.textContent = type;
+    
+
     const workoutCard = document.createElement('div');
 
     const workoutCardTop = document.createElement('div');
@@ -165,9 +247,46 @@ function createWorkoutListItem(workout) {
     workoutCard.appendChild(workoutCardBottom);
 
     li.appendChild(workoutCard);
+    li.appendChild(typeTag);
 
     return li;
     }
+
+function getWorkoutType(name) {
+    const lower = name.toLowerCase();
+
+    if(lower.includes('push') || lower.includes('bench') || lower.includes('press') || lower.includes('pull') || lower.includes('squat') || lower.includes('deadlift')) {
+        return 'Strength';
+    }
+
+    if(lower.includes('run') || lower.includes('cardio') || lower.includes('bike') || lower.includes('swim') || lower.includes('jump') || lower.includes('treadmill') || lower.includes('walk')) {
+        return 'Cardio';
+    }
+
+    if(lower.includes('yoga') || lower.includes('stretch') || lower.includes('pilates') || lower.includes('mobility')) {
+        return 'Mobility';
+    }
+    
+    return 'Other';
+}
+
+function openDeleteModal(id) {
+    currentDeleteId = id;
+
+    deleteModal.classList.remove('hidden');
+    document.body.classList.add('modal-open');
+}
+
+function showDeleteToast() {
+    const toast = document.getElementById('delete-toast');
+    toast.classList.remove('hidden');
+    toast.classList.add('show');
+
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.classList.add('hidden'), 300);
+    }, 1500);
+}
 
 // =========================
 // SECTION 3: CRUD Operations
@@ -178,6 +297,8 @@ async function loadWorkouts() {
 
     try {
         loadButton.disabled = true;
+        loadButton.textContent = 'Loading...';
+        loadButton.classList.add('loading-button');
         showLoading();
         const res = await fetch('/api/workouts', {
             headers: {
@@ -193,10 +314,21 @@ async function loadWorkouts() {
         return workout.name.toLowerCase().includes(searchTerm);
         });
 
+        const emptyState = document.getElementById('empty-state');
+
+        if (foundTerm.length == 0) {
+            list.innerHTML = '';                    // Clear stale items
+            emptyState.classList.remove('hidden');
+            return;                                 // Stop early - nothing to render
+        } else {
+            emptyState.classList.add('hidden');
+        }
+
         list.innerHTML = '';
 
         foundTerm.forEach(workout => {
         const li = createWorkoutListItem(workout);
+        li.classList.add('fade-in');
         list.appendChild(li);
         });
     }
@@ -206,6 +338,8 @@ async function loadWorkouts() {
         return;
     }
     finally {
+        loadButton.textContent = 'Load Workouts';
+        loadButton.classList.remove('loading-button');
         loadButton.disabled = false;
         hideLoading();
     }
@@ -279,8 +413,6 @@ async function editWorkout(id) {
             }
         });
         const workout = await res.json();
-        
-        const editForm = document.getElementById('edit-form');
         const editName = document.getElementById('edit-name');
         const editAmount = document.getElementById('edit-amount');
         const editWorkType = document.getElementById('edit-work-type');
@@ -294,6 +426,11 @@ async function editWorkout(id) {
         editAmount.value = workout.amount;
         editWorkType.value = workout.workType;
         editNotes.value = workout.notes || '';
+
+        editModal.classList.remove('hidden');
+        document.body.classList.add('modal-open');
+
+        editName.focus();
 
     if (workout.date) {
         const date = formatDateTime(new Date(workout.date));
@@ -341,11 +478,13 @@ async function editWorkout(id) {
             hideLoading();
         }
         hideMessage();
-        editForm.classList.add('hidden');
+        editModal.classList.add('hidden');
+        document.body.classList.remove('modal-open');
         loadWorkouts();
     };
     cancelEditBtn.onclick = () => {
-        editForm.classList.add('hidden');
+        editModal.classList.add('hidden');
+        document.body.classList.remove('modal-open');
         hideMessage();
     }
     }
@@ -423,7 +562,15 @@ workoutList.addEventListener('click', (e) => {
         editWorkout(id);
     } else if (e.target.classList.contains('delete-btn')) {
         const id = e.target.getAttribute('data-id');
-        deleteWorkout(id);
+        openDeleteModal(id);
     }
 });
 searchBar.addEventListener('input', loadWorkouts);
+searchBar.addEventListener('input', () => {
+    clearSearch.classList.toggle('hidden', searchBar.value === '');
+})
+clearSearch.addEventListener('click', () => {
+    searchBar.value = '';
+    clearSearch.classList.add('hidden');
+    loadWorkouts();
+});
