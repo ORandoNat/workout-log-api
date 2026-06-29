@@ -18,17 +18,7 @@ const allowedOrigins = [
   'https://workout-log-tfw8.onrender.com'
 ];
 
-app.use(cors({
-  origin: function (origin, callback) {
-    if (!origin) return callback(null, true);  // allow tools/curl/mobile apps
-    if (allowedOrigins.includes(origin)) {
-      return callback(null, true);
-    } else {
-      return callback(new Error('CORS not allowed'));
-    }
-  },
-  credentials: true
-}));
+app.use(cors());
 
 // Middleware
 app.use(express.json());  // Parse incoming JSON bodies
