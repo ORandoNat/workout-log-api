@@ -7,8 +7,6 @@ const User = require('../models/userModel');
 
 const router = express.Router();
 
-console.log(">>> SIGNUP ROUTE HIT <<<");
-
 // Helper function to generate JWT
 const createToken = (id) => {
     return jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '7d' });
@@ -16,6 +14,8 @@ const createToken = (id) => {
 
 // SIGNUP Route - Creates a new user account
 router.post('/signup', async (req, res) => {
+    console.log(">>> SIGNUP ROUTE REALLY HIT <<<");
+    console.log("SIGNUP BODY:", req.body);
 
     const { email, password } = req.body;
 
