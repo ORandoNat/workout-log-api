@@ -75,16 +75,11 @@ workout-log-api/
 │   ├── userRoutes.js         # Signup + login routes
 │   └── workoutRoutes.js      # CRUD workout routes (protected)
 │
-├── controllers/
-│   ├── userController.js     # Signup/login logic
-│   └── workoutController.js  # Workout CRUD logic
-│
 └── public/                   # Frontend served by Express
 ├── index.html                # Dashboard (workouts)
 ├── login.html                # Login page
 ├── signup.html               # Signup page
 ├── styles.css                # Styling
-├── index.js                  # Dashboard logic
 ├── login.js                  # Login logic
 └── signup.js                 # Signup logic
 ```
