@@ -13,12 +13,6 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,     // Will be hashed before saving
-    },
-    displayName: {
-        type: String,
-        required: false,    // Optional display name field
-        unique: true,
-        trim: true
     }
 }, {timestamps:true});      // Adds createdAt and updatedAt fields automatically
 

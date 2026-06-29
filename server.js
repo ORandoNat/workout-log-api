@@ -15,7 +15,7 @@ const allowedOrigins = [
   'http://localhost:3000',
   'http://localhost:4000',
   'http://172.27.185.122:3000',
-  'http://frontend-domain.com'  // placeholder for now
+  'https://workout-log-tfw8.onrender.com'
 ];
 
 app.use(cors({
@@ -32,11 +32,12 @@ app.use(cors({
 
 // Middleware
 app.use(express.json());  // Parse incoming JSON bodies
-app.use(express.static('public'));  // Serve frontend files
 
 // Routes
 app.use('/api/user', userRoutes);
 app.use('/api/workouts', workoutRoutes);
+
+app.use(express.static('public'));  // Serve frontend files
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGO_URI)

@@ -1,4 +1,8 @@
-const API_BASE = "http://172.27.185.122:4000";
+const API_BASE = "https://workout-log-tfw8.onrender.com";
+
+async function apiFetch(path, options = {}) {
+    return fetch(`${API_BASE}${path}`, options);
+}
 
 (function () {
     const token = localStorage.getItem('token');
@@ -13,7 +17,7 @@ document.getElementById('signup-form').addEventListener('submit', async (e) => {
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
 
-      const res = await fetch(`${API_BASE}/api/user/signup`, {
+      const res = await apiFetch('/api/user/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password })

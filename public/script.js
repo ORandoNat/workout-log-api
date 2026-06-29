@@ -2,6 +2,7 @@
 // SECTION 1: Global Setup & Initialization
 // =========================
 
+const API_BASE = "https://workout-log-tfw8.onrender.com"
 const logButton = document.getElementById('log-button');
 const notesButton = document.getElementById('notes-button');
 const loadButton = document.getElementById('load-button');
@@ -16,6 +17,10 @@ const confirmDeleteBtn = document.getElementById('confirm-delete-button');
 
 let currentDeleteId = null;
 
+async function apiFetch(path, options = {}) {
+    return fetch(`${API_BASE}${path}`, options);
+}
+
 (function () {
     const token = localStorage.getItem('token');
     if (!token) {
@@ -26,7 +31,7 @@ let currentDeleteId = null;
 document.addEventListener('DOMContentLoaded', async () => {
     try {
         showLoading();
-        const res = await fetch('/config');
+        const res = await apiFetch('/config');
         const config = await res.json();
         window.baseURL = config.baseUrl;
         loadWorkouts();
@@ -83,7 +88,7 @@ confirmDeleteBtn.addEventListener('click', async () => {
     const token = localStorage.getItem('token');
 
     try {
-        const res = await fetch(`/api/workouts/${currentDeleteId}`, {
+        const res = await apiFetch(`/api/workouts/${currentDeleteId}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${token}`
@@ -300,7 +305,7 @@ async function loadWorkouts() {
         loadButton.textContent = 'Loading...';
         loadButton.classList.add('loading-button');
         showLoading();
-        const res = await fetch('/api/workouts', {
+        const res = await apiFetch('/api/workouts', {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
@@ -367,7 +372,7 @@ async function addWorkout() {
     try {
         logButton.disabled = true;
         showLoading();
-        await fetch('/api/workouts', {
+        await apiFetch('/api/workouts', {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json', 
@@ -407,7 +412,7 @@ async function addWorkout() {
 async function editWorkout(id) {
     try {
         showLoading();
-        const res = await fetch(`/api/workouts/${id}`, {
+        const res = await apiFetch(`/api/workouts/${id}`, {
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`
             }
@@ -459,7 +464,7 @@ async function editWorkout(id) {
         try {
         saveEditBtn.disabled = true;
         showLoading();
-        await fetch(`/api/workouts/${id}`, {
+        await apiFetch(`/api/workouts/${id}`, {
             method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
@@ -504,7 +509,7 @@ async function deleteWorkout(id) {
     try {
         deleteButton.disabled = true;
         showLoading();
-        await fetch(`/api/workouts/${id}`, {
+        await apiFetch(`/api/workouts/${id}`, {
             method: 'DELETE',
             headers: {
                 'Authorization': `Bearer ${localStorage.getItem('token')}`

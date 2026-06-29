@@ -1,5 +1,9 @@
 const loginForm = document.getElementById('login-form');
-const API_BASE = "http://172.27.185.122:4000";
+const API_BASE = "https://workout-log-tfw8.onrender.com";
+
+async function apiFetch(path, options = {}) {
+    return fetch(`${API_BASE}${path}`, options);
+}
 
 (function () {
     const token = localStorage.getItem('token');
